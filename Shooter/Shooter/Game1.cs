@@ -18,11 +18,10 @@ namespace Shooter
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-
         ObjetoDibujable Fondo;
         ObjetoDibujable Personaje;
-        ObjetoDibujable Bala;
-        List<ObjetoDibujable> Balas;
+        //ObjetoDibujable Bala;
+        //List<ObjetoDibujable> Balas;
 
         public Game1()
         {
@@ -52,7 +51,13 @@ namespace Shooter
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             this.Fondo = new ObjetoDibujable(Content.Load<Texture2D>("bgLayer1"), Vector2.Zero);
-            this.Personaje = new ObjetoDibujable(Content.Load<Texture2D>("player"), Vector2.Zero);
+            
+            // Sobre el personaje. Este código está un poquito sucio che...
+            this.Personaje = new ObjetoDibujable(Content.Load<Texture2D>("shipAnimation"), Vector2.Zero);
+            var AnimacionPersonaje = new Animacion();
+            AnimacionPersonaje.Initialize(Personaje.Textura, Vector2.Zero, 115, 69, 8, 30, Color.White, 1f, true);
+            Personaje.AnimacionObjeto = AnimacionPersonaje;
+
             // TODO: use this.Content to load your game content here
         }
 
@@ -74,7 +79,6 @@ namespace Shooter
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-
             // Teclado ó DPad
             if (Keyboard.GetState().IsKeyDown(Keys.Left) || GamePad.GetState(PlayerIndex.One).DPad.Left == ButtonState.Pressed)
                 Personaje.Posicion.X -= Personaje.Velocidad;
@@ -86,8 +90,12 @@ namespace Shooter
                 Personaje.Posicion.Y += Personaje.Velocidad;
 
             // Stick analógico :D
-            Personaje.Posicion = new Vector2(Personaje.Posicion.X + GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X * 10,
+            Personaje.Posicion = new Vector2(
+                Personaje.Posicion.X + GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X * 15,
                 Personaje.Posicion.Y + -1 * GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y * 15);
+
+            Personaje.Update(gameTime);
+            
 
             // Asegurarse que el personaje no se escapa de la pantalla. "Clamp" significa algo así como "Abrazadera".
             Personaje.NoHuirDeLaVentana(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);

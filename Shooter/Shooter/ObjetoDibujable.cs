@@ -10,15 +10,15 @@ namespace Shooter
     class ObjetoDibujable
     {
         // La vida misma del objeto.
-        public Texture2D Textura { get { return Texturas.First(); } }
-        public List<Texture2D> Texturas { get; set; }
+        public Texture2D Textura;
+        public Animacion AnimacionObjeto;
 
         // Información dimensional.
-        //public Vector2 Velocidad = new Vector2(50.0f, 50.0f); // Esto podría ser mejor... o no.
+        //public Vector2 Velocidad = new Vector2(50.0f, 50.0f); // Esto podría ser mejor... o no. El operador += está sobrecargado para
         public float Velocidad = 8.0f;
         public Vector2 Posicion;
-        public float Ancho { get { return this.Textura.Width; } }
-        public float Alto { get { return this.Textura.Height; } }
+        public float Ancho { get { return this.AnimacionObjeto.FrameWidth; } }
+        public float Alto { get { return this.AnimacionObjeto.FrameHeight; } }
 
         // Estado del personaje o lo que represente el objeto.
         public bool Activo;
@@ -27,18 +27,19 @@ namespace Shooter
         public ObjetoDibujable(Texture2D Textura)
         {
             Posicion = Vector2.Zero;
-            this.Inicializar();
+            this.Inicializar(new Animacion());
         }
 
         public ObjetoDibujable(Texture2D Textura, Vector2 Posicion)
         {
-            this.Texturas = new List<Texture2D> { Textura };
-            Posicion = Vector2.Zero;
-            this.Inicializar();
+            this.Textura = Textura;
+            this.Posicion = Posicion;
+            this.Inicializar(new Animacion());
         }
 
-        private void Inicializar()
+        public void Inicializar(Animacion Animacion)
         {
+            this.AnimacionObjeto = Animacion;
             this.Activo = true;
             this.Vida = 100.0f;
         }
@@ -46,10 +47,18 @@ namespace Shooter
         public void Draw(SpriteBatch spriteBatch)
         {
             if (this.Activo)
-                spriteBatch.Draw(Textura, Posicion, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                AnimacionObjeto.Draw(spriteBatch);
+            //spriteBatch.Draw(Textura, Posicion, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
         }
 
-        public void RecibirDanios(float Intensidad = 5)
+        // Actualiza la animación
+        public void Update(GameTime gameTime)
+        {
+            AnimacionObjeto.Position = Posicion;
+            AnimacionObjeto.Update(gameTime);
+        }
+
+        public void RecibirDanios(float Intensidad = 5) // C# Soporta caracteres locos como la ñ pero igual...
         {
             Vida -= Intensidad;
             this.Activo = Vida <= 0;
@@ -57,8 +66,8 @@ namespace Shooter
 
         public void NoHuirDeLaVentana(float Ancho, float Alto)
         {
-            Posicion.X = MathHelper.Clamp(this.Posicion.X, 0, Ancho - this.Textura.Width);
-            Posicion.Y = MathHelper.Clamp(this.Posicion.Y, 0, Alto - this.Textura.Height);
+            Posicion.X = MathHelper.Clamp(this.Posicion.X, 0, Ancho - this.Ancho);
+            Posicion.Y = MathHelper.Clamp(this.Posicion.Y, 0, Alto - this.Alto);
         }
     }
 }
