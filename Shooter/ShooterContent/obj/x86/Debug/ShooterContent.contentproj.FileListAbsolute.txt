@@ -1,0 +1,2 @@
+C:\Users\ArmandoAndres\Downloads\Shooter_Project_Windows\Shooter\Shooter\ShooterContent\obj\x86\Debug\ShooterContent.contentprojResolveAssemblyReference.cache
+D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\Shooter\ShooterContent\obj\x86\Debug\ShooterContent.contentprojResolveAssemblyReference.cache
