@@ -90,8 +90,7 @@ namespace Shooter
                 Personaje.Posicion.Y + -1 * GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y * 15);
 
             // Asegurarse que el personaje no se escapa de la pantalla. "Clamp" significa algo así como "Abrazadera".
-            Personaje.Posicion.X = MathHelper.Clamp(Personaje.Posicion.X, 0, GraphicsDevice.Viewport.Width - Personaje.Textura.Width);
-            Personaje.Posicion.Y = MathHelper.Clamp(Personaje.Posicion.Y, 0, GraphicsDevice.Viewport.Height - Personaje.Textura.Height);
+            Personaje.NoHuirDeLaVentana(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
             base.Update(gameTime);
         }
@@ -104,8 +103,8 @@ namespace Shooter
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
-            spriteBatch.Draw(Fondo.Textura, Fondo.Posicion, Color.White);
-            spriteBatch.Draw(Personaje.Textura, Personaje.Posicion, Color.White);
+            Fondo.Draw(this.spriteBatch);
+            Personaje.Draw(this.spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);
