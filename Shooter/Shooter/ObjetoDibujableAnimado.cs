@@ -66,8 +66,8 @@ namespace Shooter
 
         public void NoHuirDeLaVentana(float Ancho, float Alto)
         {
-            Posicion.X = MathHelper.Clamp(this.Posicion.X, 0, Ancho - this.Ancho);
-            Posicion.Y = MathHelper.Clamp(this.Posicion.Y, 0, Alto - this.Alto);
+            Posicion.X = MathHelper.Clamp(this.Posicion.X, 0, Ancho - this.Ancho / 2);
+            Posicion.Y = MathHelper.Clamp(this.Posicion.Y, 0, Alto - this.Alto / 2);
         }
     }
 }

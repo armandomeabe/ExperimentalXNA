@@ -18,10 +18,15 @@ namespace Shooter
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        ObjetoDibujable Fondo;
         ObjetoDibujableAnimado Personaje;
         //ObjetoDibujable Bala;
         //List<ObjetoDibujable> Balas;
+
+        // La textura del fondo estático
+        ObjetoDibujable FondoPrincipal;
+        // Parallaxing backs
+        ParallaxingBackground bgLayer1;
+        ParallaxingBackground bgLayer2;
 
         public Game1()
         {
@@ -37,7 +42,8 @@ namespace Shooter
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            bgLayer1 = new ParallaxingBackground();
+            bgLayer2 = new ParallaxingBackground();
             base.Initialize();
         }
 
@@ -49,13 +55,18 @@ namespace Shooter
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            this.Fondo = new ObjetoDibujable(Content.Load<Texture2D>("bgLayer1"), Vector2.Zero);
             
             // Sobre el personaje. Este código está un poquito sucio che...
-            this.Personaje = new ObjetoDibujableAnimado(Content.Load<Texture2D>("shipAnimation"), Vector2.Zero);
+            this.Personaje = new ObjetoDibujableAnimado(Content.Load<Texture2D>("shipAnimation"), new Vector2(150));
             var AnimacionPersonaje = new Animacion();
             AnimacionPersonaje.Initialize(Personaje.Textura, Vector2.Zero, 115, 69, 8, 30, Color.White, 1f, true);
             Personaje.AnimacionObjeto = AnimacionPersonaje;
+
+            // Cargamos los parallaxing backs (Como traduzco esto?)
+            bgLayer1.Initialize(Content, "bgLayer1", GraphicsDevice.Viewport.Width, -1);
+            bgLayer2.Initialize(Content, "bgLayer2", GraphicsDevice.Viewport.Width, -2);
+
+            FondoPrincipal = new  ObjetoDibujable(Content.Load<Texture2D>("mainbackground"), Vector2.Zero);
         }
 
         /// <summary>
@@ -97,6 +108,10 @@ namespace Shooter
             // Asegurarse que el personaje no se escapa de la pantalla. "Clamp" significa algo así como "Abrazadera".
             Personaje.NoHuirDeLaVentana(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
+            // Fondos animados
+            bgLayer1.Update();
+            bgLayer2.Update();
+
             base.Update(gameTime);
         }
 
@@ -108,7 +123,12 @@ namespace Shooter
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
-            Fondo.Draw(this.spriteBatch);
+            
+            // Fondos
+            FondoPrincipal.Draw(this.spriteBatch);
+            bgLayer1.Draw(spriteBatch);
+            bgLayer2.Draw(spriteBatch);
+
             Personaje.Draw(this.spriteBatch);
             spriteBatch.End();
 
