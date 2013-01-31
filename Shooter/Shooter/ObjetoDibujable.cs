@@ -12,8 +12,10 @@ namespace Shooter
         public Texture2D Textura { get { return Texturas[0]; } }
         public List<Texture2D> Texturas { get; set; }
 
-        public Vector2 Posicion { get; set; }
-        public Vector2 Velocidad = new Vector2(50.0f, 50.0f);
+        public Vector2 Posicion;
+        //public Vector2 Velocidad = new Vector2(50.0f, 50.0f);
+
+        public float Velocidad = 8.0f;
 
         public ObjetoDibujable(Texture2D Textura)
         {

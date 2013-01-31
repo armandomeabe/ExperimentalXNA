@@ -21,6 +21,8 @@ namespace Shooter
 
         ObjetoDibujable Fondo;
         ObjetoDibujable Personaje;
+        ObjetoDibujable Bala;
+        List<ObjetoDibujable> Balas;
 
         public Game1()
         {
@@ -70,18 +72,26 @@ namespace Shooter
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            // TODO: Add your update logic here
-            // Move the sprite by speed, scaled by elapsed time.
-            //Personaje.Posicion += Personaje.Velocidad *(float)gameTime.ElapsedGameTime.TotalSeconds;
+            // Teclado ó DPad
+            if (Keyboard.GetState().IsKeyDown(Keys.Left) || GamePad.GetState(PlayerIndex.One).DPad.Left == ButtonState.Pressed)
+                Personaje.Posicion.X -= Personaje.Velocidad;
+            if (Keyboard.GetState().IsKeyDown(Keys.Right) || GamePad.GetState(PlayerIndex.One).DPad.Right == ButtonState.Pressed)
+                Personaje.Posicion.X += Personaje.Velocidad;
+            if (Keyboard.GetState().IsKeyDown(Keys.Up) || GamePad.GetState(PlayerIndex.One).DPad.Up == ButtonState.Pressed)
+                Personaje.Posicion.Y -= Personaje.Velocidad;
+            if (Keyboard.GetState().IsKeyDown(Keys.Down) || GamePad.GetState(PlayerIndex.One).DPad.Down == ButtonState.Pressed)
+                Personaje.Posicion.Y += Personaje.Velocidad;
 
-            //Personaje.Posicion = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
-
+            // Stick analógico :D
             Personaje.Posicion = new Vector2(Personaje.Posicion.X + GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X * 10,
-                Personaje.Posicion.Y + -1 * GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y * 10);
+                Personaje.Posicion.Y + -1 * GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y * 15);
+
+            // Asegurarse que el personaje no se escapa de la pantalla. "Clamp" significa algo así como "Abrazadera".
+            Personaje.Posicion.X = MathHelper.Clamp(Personaje.Posicion.X, 0, GraphicsDevice.Viewport.Width - Personaje.Textura.Width);
+            Personaje.Posicion.Y = MathHelper.Clamp(Personaje.Posicion.Y, 0, GraphicsDevice.Viewport.Height - Personaje.Textura.Height);
 
             base.Update(gameTime);
         }

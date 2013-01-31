@@ -7,7 +7,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\Shooter\Shooter\bin\x86\Debug\Content\bgLayer1.xnb</Output>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\bgLayer1.xnb</Output>
       <Time>2011-04-01T09:42:38-03:00</Time>
     </Item>
     <Item>
@@ -16,7 +16,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\Shooter\Shooter\bin\x86\Debug\Content\bgLayer2.xnb</Output>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\bgLayer2.xnb</Output>
       <Time>2011-04-01T09:42:38-03:00</Time>
     </Item>
     <Item>
@@ -25,7 +25,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\Shooter\Shooter\bin\x86\Debug\Content\endMenu.xnb</Output>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\endMenu.xnb</Output>
       <Time>2011-04-01T09:42:38-03:00</Time>
     </Item>
     <Item>
@@ -34,7 +34,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\Shooter\Shooter\bin\x86\Debug\Content\explosion.xnb</Output>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\explosion.xnb</Output>
       <Time>2011-04-01T09:42:38-03:00</Time>
     </Item>
     <Item>
@@ -43,7 +43,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\Shooter\Shooter\bin\x86\Debug\Content\laser.xnb</Output>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\laser.xnb</Output>
       <Time>2011-04-01T09:42:38-03:00</Time>
     </Item>
     <Item>
@@ -52,7 +52,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\Shooter\Shooter\bin\x86\Debug\Content\mainbackground.xnb</Output>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\mainbackground.xnb</Output>
       <Time>2011-04-01T09:42:38-03:00</Time>
     </Item>
     <Item>
@@ -61,7 +61,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\Shooter\Shooter\bin\x86\Debug\Content\mainMenu.xnb</Output>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\mainMenu.xnb</Output>
       <Time>2011-04-01T09:42:38-03:00</Time>
     </Item>
     <Item>
@@ -70,7 +70,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\Shooter\Shooter\bin\x86\Debug\Content\mine.xnb</Output>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\mine.xnb</Output>
       <Time>2011-04-01T09:42:38-03:00</Time>
     </Item>
     <Item>
@@ -79,7 +79,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\Shooter\Shooter\bin\x86\Debug\Content\mineAnimation.xnb</Output>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\mineAnimation.xnb</Output>
       <Time>2011-04-01T09:42:38-03:00</Time>
     </Item>
     <Item>
@@ -88,7 +88,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\Shooter\Shooter\bin\x86\Debug\Content\player.xnb</Output>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\player.xnb</Output>
       <Time>2011-04-01T09:42:38-03:00</Time>
     </Item>
     <Item>
@@ -97,7 +97,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\Shooter\Shooter\bin\x86\Debug\Content\shipAnimation.xnb</Output>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\shipAnimation.xnb</Output>
       <Time>2011-04-01T09:42:38-03:00</Time>
     </Item>
     <Item>
@@ -106,7 +106,7 @@
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\Shooter\Shooter\bin\x86\Debug\Content\Sound\explosion.xnb</Output>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Sound\explosion.xnb</Output>
       <Time>2011-04-01T09:42:38-03:00</Time>
     </Item>
     <Item>
@@ -115,7 +115,7 @@
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\Shooter\Shooter\bin\x86\Debug\Content\Sound\laserFire.xnb</Output>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Sound\laserFire.xnb</Output>
       <Time>2011-04-01T09:42:38-03:00</Time>
     </Item>
     <Item>
@@ -124,8 +124,8 @@
       <Importer>Mp3Importer</Importer>
       <Processor>SongProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\Shooter\Shooter\bin\x86\Debug\Content\Sound\gameMusic.xnb</Output>
-      <Extra>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\Shooter\Shooter\bin\x86\Debug\Content\Sound\gameMusic.wma</Extra>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Sound\gameMusic.xnb</Output>
+      <Extra>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Sound\gameMusic.wma</Extra>
       <Time>2011-04-01T09:42:38-03:00</Time>
     </Item>
     <Item>
@@ -134,8 +134,8 @@
       <Importer>Mp3Importer</Importer>
       <Processor>SongProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\Shooter\Shooter\bin\x86\Debug\Content\Sound\menuMusic.xnb</Output>
-      <Extra>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\Shooter\Shooter\bin\x86\Debug\Content\Sound\menuMusic.wma</Extra>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Sound\menuMusic.xnb</Output>
+      <Extra>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Sound\menuMusic.wma</Extra>
       <Time>2011-04-01T09:42:38-03:00</Time>
     </Item>
     <Item>
@@ -144,7 +144,7 @@
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\Shooter\Shooter\bin\x86\Debug\Content\gameFont.xnb</Output>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\gameFont.xnb</Output>
       <Time>2011-04-01T09:42:38-03:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
@@ -154,10 +154,10 @@
       <TargetProfile>HiDef</TargetProfile>
       <BuildConfiguration>Debug</BuildConfiguration>
       <CompressContent>false</CompressContent>
-      <RootDirectory>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\Shooter\ShooterContent\</RootDirectory>
-      <LoggerRootDirectory>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\Shooter\Shooter\</LoggerRootDirectory>
-      <IntermediateDirectory>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\Shooter\ShooterContent\obj\x86\Debug\</IntermediateDirectory>
-      <OutputDirectory>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\Shooter\Shooter\bin\x86\Debug\Content\</OutputDirectory>
+      <RootDirectory>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\ShooterContent\</RootDirectory>
+      <LoggerRootDirectory>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\</LoggerRootDirectory>
+      <IntermediateDirectory>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\ShooterContent\obj\x86\Debug\</IntermediateDirectory>
+      <OutputDirectory>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\</OutputDirectory>
     </Settings>
     <Assemblies>
       <Assembly>
