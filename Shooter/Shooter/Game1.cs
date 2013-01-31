@@ -19,7 +19,7 @@ namespace Shooter
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         ObjetoDibujable Fondo;
-        ObjetoDibujable Personaje;
+        ObjetoDibujableAnimado Personaje;
         //ObjetoDibujable Bala;
         //List<ObjetoDibujable> Balas;
 
@@ -49,16 +49,13 @@ namespace Shooter
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
             this.Fondo = new ObjetoDibujable(Content.Load<Texture2D>("bgLayer1"), Vector2.Zero);
             
             // Sobre el personaje. Este código está un poquito sucio che...
-            this.Personaje = new ObjetoDibujable(Content.Load<Texture2D>("shipAnimation"), Vector2.Zero);
+            this.Personaje = new ObjetoDibujableAnimado(Content.Load<Texture2D>("shipAnimation"), Vector2.Zero);
             var AnimacionPersonaje = new Animacion();
             AnimacionPersonaje.Initialize(Personaje.Textura, Vector2.Zero, 115, 69, 8, 30, Color.White, 1f, true);
             Personaje.AnimacionObjeto = AnimacionPersonaje;
-
-            // TODO: use this.Content to load your game content here
         }
 
         /// <summary>
