@@ -74,43 +74,14 @@ namespace Shooter
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            
-
             // TODO: Add your update logic here
             // Move the sprite by speed, scaled by elapsed time.
             //Personaje.Posicion += Personaje.Velocidad *(float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            Personaje.Posicion = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
+            //Personaje.Posicion = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
 
-            int MaxX = graphics.GraphicsDevice.Viewport.Width - Personaje.Textura.Width;
-            int MinX = 0;
-            int MaxY = graphics.GraphicsDevice.Viewport.Height - Personaje.Textura.Height;
-            int MinY = 0;
-            
-            // Check for bounce.
-            if (Personaje.Posicion.X > MaxX)
-            {
-                Personaje.Velocidad.X *= -1;
-                //Personaje.Posicion.X = MaxX;
-            }
-
-            else if (Personaje.Posicion.X < MinX)
-            {
-                Personaje.Velocidad.X *= -1;
-                //spritePosition.X = MinX;
-            }
-
-            if (Personaje.Posicion.Y > MaxY)
-            {
-                Personaje.Velocidad.Y *= -1;
-                //spritePosition.Y = MaxY;
-            }
-
-            else if (Personaje.Posicion.Y < MinY)
-            {
-                Personaje.Velocidad.Y *= -1;
-                //spritePosition.Y = MinY;
-            }
+            Personaje.Posicion = new Vector2(Personaje.Posicion.X + GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X * 10,
+                Personaje.Posicion.Y + -1 * GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y * 10);
 
             base.Update(gameTime);
         }
