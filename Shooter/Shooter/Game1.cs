@@ -19,8 +19,9 @@ namespace Shooter
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         ObjetoDibujableAnimado Personaje;
-        //ObjetoDibujable Bala;
-        //List<ObjetoDibujable> Balas;
+
+        List<ObjetoDibujableAnimado> Enemigos;
+        //ObjetoDibujableAnimado Enemigo;
 
         // La textura del fondo estático
         ObjetoDibujable FondoPrincipal;
@@ -44,6 +45,7 @@ namespace Shooter
         {
             bgLayer1 = new ParallaxingBackground();
             bgLayer2 = new ParallaxingBackground();
+            Enemigos = new List<ObjetoDibujableAnimado>();
             base.Initialize();
         }
 
@@ -55,18 +57,20 @@ namespace Shooter
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            
+
             // Sobre el personaje. Este código está un poquito sucio che...
             this.Personaje = new ObjetoDibujableAnimado(Content.Load<Texture2D>("shipAnimation"), new Vector2(150));
             var AnimacionPersonaje = new Animacion();
             AnimacionPersonaje.Initialize(Personaje.Textura, Vector2.Zero, 115, 69, 8, 30, Color.White, 1f, true);
             Personaje.AnimacionObjeto = AnimacionPersonaje;
-
+            
             // Cargamos los parallaxing backs (Como traduzco esto?)
             bgLayer1.Initialize(Content, "bgLayer1", GraphicsDevice.Viewport.Width, -1);
             bgLayer2.Initialize(Content, "bgLayer2", GraphicsDevice.Viewport.Width, -2);
 
             FondoPrincipal = new  ObjetoDibujable(Content.Load<Texture2D>("mainbackground"), Vector2.Zero);
+
+            NuevoEnemigo();
         }
 
         /// <summary>
@@ -103,7 +107,12 @@ namespace Shooter
                 Personaje.Posicion.Y + -1 * GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y * 15);
 
             Personaje.Update(gameTime);
-            
+            foreach (var Enemigo in Enemigos)
+            {
+                Enemigo.MoverRelativo(-1, (new Random()).Next(-1,1));
+                Enemigo.Update(gameTime);
+                Enemigo.RecibirDanios();
+            }
 
             // Asegurarse que el personaje no se escapa de la pantalla. "Clamp" significa algo así como "Abrazadera".
             Personaje.NoHuirDeLaVentana(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
@@ -130,9 +139,25 @@ namespace Shooter
             bgLayer2.Draw(spriteBatch);
 
             Personaje.Draw(this.spriteBatch);
+            foreach (var Enemigo in Enemigos)
+            {
+                Enemigo.Draw(this.spriteBatch);
+            }
+
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        private void NuevoEnemigo(string Textura = "mineAnimation")
+        {
+            var R = new Random(DateTime.Now.Millisecond);
+            Vector2 posicionAleatoria = new Vector2(R.Next(0, GraphicsDevice.Viewport.Width), R.Next(0, GraphicsDevice.Viewport.Height));
+            var Enemigo = new ObjetoDibujableAnimado(Content.Load<Texture2D>(Textura), posicionAleatoria);
+            var AnimacionEnemigo = new Animacion();
+            AnimacionEnemigo.Initialize(Enemigo.Textura, Vector2.Zero, 47, 61, 8, 30, Color.White, 1f, true);
+            Enemigo.AnimacionObjeto = AnimacionEnemigo;
+            Enemigos.Add(Enemigo);
         }
     }
 }

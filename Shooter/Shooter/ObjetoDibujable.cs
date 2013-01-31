@@ -64,5 +64,17 @@ namespace Shooter
             Posicion.X = MathHelper.Clamp(this.Posicion.X, 0, Ancho - this.Ancho / 2);
             Posicion.Y = MathHelper.Clamp(this.Posicion.Y, 0, Alto - this.Alto / 2);
         }
+
+        public void MoverRelativo(float dX = 0, float dY = 0)
+        {
+            this.Posicion.X += dX;
+            this.Posicion.Y += dY;
+        }
+
+        public void MoverAbsoluto(float dX = 0, float dY = 0)
+        {
+            this.Posicion.X = dX;
+            this.Posicion.Y = dY;
+        }
     }
 }
