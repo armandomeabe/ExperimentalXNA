@@ -70,3 +70,27 @@ D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\
 D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
 D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\obj\x86\Debug\Shooter.exe
 D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\obj\x86\Debug\Shooter.pdb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\bgLayer1.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\bgLayer2.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\endMenu.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\explosion.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\laser.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\mainbackground.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\mainMenu.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\mine.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\mineAnimation.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\player.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\shipAnimation.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Sound\explosion.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Sound\laserFire.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Sound\gameMusic.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Sound\menuMusic.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\gameFont.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Sound\gameMusic.wma
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Sound\menuMusic.wma
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Shooter.exe
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Shooter.pdb
+D:\repos\ExperimentalXNA\Shooter\Shooter\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\repos\ExperimentalXNA\Shooter\Shooter\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+D:\repos\ExperimentalXNA\Shooter\Shooter\obj\x86\Debug\Shooter.exe
+D:\repos\ExperimentalXNA\Shooter\Shooter\obj\x86\Debug\Shooter.pdb

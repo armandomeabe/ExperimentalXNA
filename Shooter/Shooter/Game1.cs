@@ -63,6 +63,9 @@ namespace Shooter
         int score;
         SpriteFont font;
 
+        //Bandera para Pausa
+        bool pause;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -100,6 +103,8 @@ namespace Shooter
             Explosiones = new List<Animacion>();
 
             score = 0;
+
+            pause = false;
 
             base.Initialize();
         }
@@ -249,17 +254,37 @@ namespace Shooter
             estadoActualDelTeclado = Keyboard.GetState();
             estadoActualGamePad = GamePad.GetState(PlayerIndex.One);
 
-            ActualizarPersonaje(gameTime);
+            //Cambia la flag cuando se presiona pausa y pausa o reproduce la música de fondo
+            if (estadoActualDelTeclado.IsKeyDown(Keys.P) ||
+            estadoActualGamePad.Buttons.Start == ButtonState.Pressed)
+            {
+                pause = !pause;
+                if (pause)
+                {
+                    MediaPlayer.Pause();
+                }
+                else
+                {
+                    MediaPlayer.Resume();
+                }
+            }
 
-            fondoCapa1.Update();
-            fondoCapa2.Update();
+            //Si está en pausa no actualiza nada
+            if (pause == false)
+            {
+                ActualizarPersonaje(gameTime);
 
-            ActualizarEnemigos(gameTime);
-            UpdateCollision();
-            ActualizarProyectiles();
-            ActualizarExplosiones(gameTime);
+                fondoCapa1.Update();
+                fondoCapa2.Update();
 
-            base.Update(gameTime);
+                ActualizarEnemigos(gameTime);
+                UpdateCollision();
+                ActualizarProyectiles();
+                ActualizarExplosiones(gameTime);
+
+                base.Update(gameTime);
+            }
+
         }
 
         private void ActualizarPersonaje(GameTime gameTime)
@@ -318,7 +343,7 @@ namespace Shooter
                     // Piiuuu!!
                     SonidoLaser.Play();
                 }
-            if (estadoActualGamePad.Buttons.B.Equals(ButtonState.Pressed) || estadoActualDelTeclado.IsKeyDown(Keys.LeftShift))
+            if (estadoActualGamePad.Buttons.B.Equals(ButtonState.Pressed) || estadoActualDelTeclado.IsKeyDown(Keys.LeftShift) || estadoActualDelTeclado.IsKeyDown(Keys.RightShift))
                 if (gameTime.TotalGameTime - DisparoTiempoDeUltimaAparicion > DisparosFrecuencia) // FORMA DE MAXI
                 {
                     // Actualiza el tiempo de cuando se disparó por última vez
