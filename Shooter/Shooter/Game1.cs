@@ -8,26 +8,60 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Input.Touch;
 
 namespace Shooter
 {
-    /// <summary>
-    /// This is the main type for your game
-    /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        ObjetoDibujableAnimado Personaje;
 
-        List<ObjetoDibujableAnimado> Enemigos;
-        //ObjetoDibujableAnimado Enemigo;
+        Personaje player;
 
-        // La textura del fondo estático
-        ObjetoDibujable FondoPrincipal;
-        // Parallaxing backs
-        ParallaxingBackground bgLayer1;
-        ParallaxingBackground bgLayer2;
+        KeyboardState estadoActualDelTeclado;
+        KeyboardState estadoPrevioDelTeclado;
+
+        GamePadState estadoActualGamePad;
+        GamePadState estadoPrevioGamePad;
+
+        float velocidadPersonaje;
+
+        Texture2D fondoEstatico;
+
+        // Fondos "Parallax" whatever that means :P
+        ParallaxingBackground fondoCapa1;
+        ParallaxingBackground fondoCapa2;
+
+        // Enemigos
+        Texture2D texturaEnemigo;
+        List<Enemigo> Enemigos;
+
+        // La frecuencia en que aparecen los enemigos
+        TimeSpan EnemigoFrecuenciaSpawn;
+        TimeSpan EnemigoTiempoDeUltimaAparicion;
+
+        Random random;
+
+        Texture2D TexturaProyectil;
+        List<Projectil> Proyectiles;
+
+        // El rate de disparo del personaje
+        TimeSpan DisparosFrecuencia;
+        TimeSpan DisparoTiempoDeUltimaAparicion;
+
+        // Lista de texturas de una explosión
+        Texture2D texturaExplosion;
+        List<Animacion> Explosiones;
+
+        // Sonidos
+        SoundEffect SonidoLaser;
+        SoundEffect SonidoExplosion;
+        Song MusicaEnJuego;
+
+        // Puntaje y fuente para mostrarlo
+        int score;
+        SpriteFont font;
 
         public Game1()
         {
@@ -43,121 +77,362 @@ namespace Shooter
         /// </summary>
         protected override void Initialize()
         {
-            bgLayer1 = new ParallaxingBackground();
-            bgLayer2 = new ParallaxingBackground();
-            Enemigos = new List<ObjetoDibujableAnimado>();
+            //Initialize the player class
+            player = new Personaje();
+            velocidadPersonaje = 8.0f;
+
+            //Enable the FreeDrag gesture. -->> Esto parece que sirve si jugás en un Windows Phone o algo con touch.
+            TouchPanel.EnabledGestures = GestureType.FreeDrag;
+
+            fondoCapa1 = new ParallaxingBackground();
+            fondoCapa2 = new ParallaxingBackground();
+
+            Enemigos = new List<Enemigo>();
+
+            EnemigoTiempoDeUltimaAparicion = TimeSpan.Zero;
+            EnemigoFrecuenciaSpawn = TimeSpan.FromSeconds(1.0f); 
+
+            random = new Random();
+
+            Proyectiles = new List<Projectil>();
+            DisparosFrecuencia = TimeSpan.FromSeconds(.15f);
+            
+            Explosiones = new List<Animacion>();
+
+            score = 0;
+
             base.Initialize();
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
+            // El SpriteBatch se usa para dibujar todo.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // Sobre el personaje. Este código está un poquito sucio che...
-            this.Personaje = new ObjetoDibujableAnimado(Content.Load<Texture2D>("shipAnimation"), new Vector2(150));
-            var AnimacionPersonaje = new Animacion();
-            AnimacionPersonaje.Initialize(Personaje.Textura, Vector2.Zero, 115, 69, 8, 30, Color.White, 1f, true);
-            Personaje.AnimacionObjeto = AnimacionPersonaje;
-            
-            // Cargamos los parallaxing backs (Como traduzco esto?)
-            bgLayer1.Initialize(Content, "bgLayer1", GraphicsDevice.Viewport.Width, -1);
-            bgLayer2.Initialize(Content, "bgLayer2", GraphicsDevice.Viewport.Width, -2);
+            Animacion AnimacionPersonaje = new Animacion();
+            Texture2D TexturaPersonaje = Content.Load<Texture2D>("shipAnimation");
+            AnimacionPersonaje.Inicializar(TexturaPersonaje, Vector2.Zero, 115, 69, 8, 30, Color.White, 1f, true);
 
-            FondoPrincipal = new  ObjetoDibujable(Content.Load<Texture2D>("mainbackground"), Vector2.Zero);
 
-            NuevoEnemigo();
+            Vector2 PosicionPersonaje = new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y
+            + GraphicsDevice.Viewport.TitleSafeArea.Height / 2);
+            player.Inicializar(AnimacionPersonaje, PosicionPersonaje);
+
+            fondoCapa1.Initialize(Content, "bgLayer1", GraphicsDevice.Viewport.Width, -1);
+            fondoCapa2.Initialize(Content, "bgLayer2", GraphicsDevice.Viewport.Width, -2);
+
+            fondoEstatico = Content.Load<Texture2D>("mainbackground");
+
+            texturaEnemigo = Content.Load<Texture2D>("mineAnimation");
+
+            TexturaProyectil = Content.Load<Texture2D>("laser");
+
+            texturaExplosion = Content.Load<Texture2D>("explosion");
+
+            MusicaEnJuego = Content.Load<Song>("sound/gameMusic");
+            SonidoLaser = Content.Load<SoundEffect>("sound/laserFire");
+            SonidoExplosion = Content.Load<SoundEffect>("sound/explosion");
+            font = Content.Load<SpriteFont>("gameFont");
+            PlayMusic(MusicaEnJuego);
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// all content.
-        /// </summary>
+        private void PlayMusic(Song song)
+        {
+            // No se bien que quieren decir con esto:
+            // Due to the way the MediaPlayer plays music,
+            // we have to catch the exception. Music will play when the game is not tethered
+            try
+            {
+                // Play the music
+                MediaPlayer.Play(song);
+                // Loop the currently playing song
+                MediaPlayer.IsRepeating = true;
+            }
+            catch { }
+        }
+
+        private void AddExplosion(Vector2 position)
+        {
+            Animacion Explosion = new Animacion();
+            Explosion.Inicializar(texturaExplosion, position, 134, 134, 12, 45, Color.White, 1f, false);
+            Explosiones.Add(Explosion);
+        }
+
+        private void AgregarEnemigo()
+        {
+            Animacion AnimacionEnemigo = new Animacion();
+            AnimacionEnemigo.Inicializar(texturaEnemigo, Vector2.Zero, 47, 61, 8, 30, Color.White, 1f, true);
+            Vector2 Posicion = new Vector2(GraphicsDevice.Viewport.Width + texturaEnemigo.Width / 2, random.Next(100, GraphicsDevice.Viewport.Height - 100));
+
+            var Enemigo = new Enemigo();
+            Enemigo.Inicializar(AnimacionEnemigo, Posicion);
+            Enemigos.Add(Enemigo);
+        }
+
+        private void ActualizarEnemigos(GameTime gameTime)
+        {
+            if (gameTime.TotalGameTime - EnemigoTiempoDeUltimaAparicion > EnemigoFrecuenciaSpawn)
+            {
+                EnemigoTiempoDeUltimaAparicion = gameTime.TotalGameTime;
+                AgregarEnemigo();
+            }
+
+            // Actualizar enemigos
+            for (int i = Enemigos.Count - 1; i >= 0; i--)
+            {
+                Enemigos[i].Update(gameTime);
+                if (!Enemigos[i].Activo)
+                {
+                    // Si no está activo y la vida es menor o igual a 0
+                    if (Enemigos[i].Vida <= 0)
+                    {
+                        // Boom!
+                        AddExplosion(Enemigos[i].Posicion);
+                        // Boom audible!
+                        SonidoExplosion.Play();
+                        score += Enemigos[i].Puntos;
+                    }
+                    // Eliminar el enemigo caído en acción
+                    Enemigos.RemoveAt(i);
+                }
+            }
+        }
+
+        private void ActualizarExplosiones(GameTime gameTime)
+        {
+            for (int i = Explosiones.Count - 1; i >= 0; i--)
+            {
+                Explosiones[i].Update(gameTime);
+                if (Explosiones[i].Activo == false)
+                {
+                    Explosiones.RemoveAt(i);
+                }
+            }
+        }
+
+        private void Disparar(Vector2 Posicion)
+        {
+            Projectil projectile = new Projectil();
+            projectile.Inicializar(GraphicsDevice.Viewport, TexturaProyectil, Posicion);
+            Proyectiles.Add(projectile);
+        }
+
+        private void ActualizarProyectiles()
+        {
+            // Update the Projectiles
+            for (int i = Proyectiles.Count - 1; i >= 0; i--)
+            {
+                Proyectiles[i].Update();
+                if (Proyectiles[i].Activo == false)
+                {
+                    Proyectiles.RemoveAt(i);
+                }
+            }
+        }
+
+
+
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
         }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-            // Teclado ó DPad
-            if (Keyboard.GetState().IsKeyDown(Keys.Left) || GamePad.GetState(PlayerIndex.One).DPad.Left == ButtonState.Pressed)
-                Personaje.Posicion.X -= Personaje.Velocidad;
-            if (Keyboard.GetState().IsKeyDown(Keys.Right) || GamePad.GetState(PlayerIndex.One).DPad.Right == ButtonState.Pressed)
-                Personaje.Posicion.X += Personaje.Velocidad;
-            if (Keyboard.GetState().IsKeyDown(Keys.Up) || GamePad.GetState(PlayerIndex.One).DPad.Up == ButtonState.Pressed)
-                Personaje.Posicion.Y -= Personaje.Velocidad;
-            if (Keyboard.GetState().IsKeyDown(Keys.Down) || GamePad.GetState(PlayerIndex.One).DPad.Down == ButtonState.Pressed)
-                Personaje.Posicion.Y += Personaje.Velocidad;
 
-            // Stick analógico :D
-            Personaje.Posicion = new Vector2(
-                Personaje.Posicion.X + GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X * 15,
-                Personaje.Posicion.Y + -1 * GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y * 15);
+            // Esto es medio al vicio por ahora:
+            // Save the previous state of the keyboard and game pad so we can determinesingle key/button presses
+            estadoPrevioGamePad = estadoActualGamePad;
+            estadoPrevioDelTeclado = estadoActualDelTeclado;
 
-            Personaje.Update(gameTime);
-            foreach (var Enemigo in Enemigos)
-            {
-                Enemigo.MoverRelativo(-1, (new Random()).Next(-1,1));
-                Enemigo.Update(gameTime);
-                Enemigo.RecibirDanios();
-            }
+            // Read the current state of the keyboard and gamepad and store it
+            estadoActualDelTeclado = Keyboard.GetState();
+            estadoActualGamePad = GamePad.GetState(PlayerIndex.One);
 
-            // Asegurarse que el personaje no se escapa de la pantalla. "Clamp" significa algo así como "Abrazadera".
-            Personaje.NoHuirDeLaVentana(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            ActualizarPersonaje(gameTime);
 
-            // Fondos animados
-            bgLayer1.Update();
-            bgLayer2.Update();
+            fondoCapa1.Update();
+            fondoCapa2.Update();
+
+            ActualizarEnemigos(gameTime);
+            UpdateCollision();
+            ActualizarProyectiles();
+            ActualizarExplosiones(gameTime);
 
             base.Update(gameTime);
         }
 
+        private void ActualizarPersonaje(GameTime gameTime)
+        {
+            player.Update(gameTime);
+
+            // Windows Phone Controls
+            while (TouchPanel.IsGestureAvailable)
+            {
+                GestureSample gesture = TouchPanel.ReadGesture();
+                if (gesture.GestureType == GestureType.FreeDrag)
+                {
+                    player.Posicion += gesture.Delta;
+                }
+            }
+
+            // Analógico
+            player.Posicion.X += estadoActualGamePad.ThumbSticks.Left.X * velocidadPersonaje;
+            player.Posicion.Y -= estadoActualGamePad.ThumbSticks.Left.Y * velocidadPersonaje;
+
+            // Teclado / Dpad
+            if (estadoActualDelTeclado.IsKeyDown(Keys.Left) ||
+            estadoActualGamePad.DPad.Left == ButtonState.Pressed)
+            {
+                player.Posicion.X -= velocidadPersonaje;
+            }
+            if (estadoActualDelTeclado.IsKeyDown(Keys.Right) ||
+            estadoActualGamePad.DPad.Right == ButtonState.Pressed)
+            {
+                player.Posicion.X += velocidadPersonaje;
+            }
+            if (estadoActualDelTeclado.IsKeyDown(Keys.Up) ||
+            estadoActualGamePad.DPad.Up == ButtonState.Pressed)
+            {
+                player.Posicion.Y -= velocidadPersonaje;
+            }
+            if (estadoActualDelTeclado.IsKeyDown(Keys.Down) ||
+            estadoActualGamePad.DPad.Down == ButtonState.Pressed)
+            {
+                player.Posicion.Y += velocidadPersonaje;
+            }
+
+
+            // Evitar que el personaje salga de la ventana
+            player.Posicion.X = MathHelper.Clamp(player.Posicion.X, 0, GraphicsDevice.Viewport.Width - player.Ancho);
+            player.Posicion.Y = MathHelper.Clamp(player.Posicion.Y, 0, GraphicsDevice.Viewport.Height - player.Alto);
+
+            // Disparar entre determinado intervalo
+            if (gameTime.TotalGameTime - DisparoTiempoDeUltimaAparicion > DisparosFrecuencia)
+            {
+                // Actualiza el tiempo de cuando se disparó por última vez
+                DisparoTiempoDeUltimaAparicion = gameTime.TotalGameTime;
+
+                // Nuevo proyectil en la parte delantera de la navecita
+                Disparar(player.Posicion + new Vector2(player.Ancho / 2, 0));
+
+                // Piiuuu!!
+                SonidoLaser.Play();
+            }
+
+            // En vez de morirte reseteás la vida
+            if (player.Vida <= 0)
+            {
+                player.Vida = 100;
+                score = 0;
+            }
+
+        }
+
         /// <summary>
-        /// This is called when the game should draw itself.
+        /// Método sacado del tutorial para calcular colisiones, funciona perfecto!
         /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        private void UpdateCollision()
+        {
+            // Use the Rectangle's built-in intersect functionto 
+            // determine if two objects are overlapping
+            Rectangle rectangle1;
+            Rectangle rectangle2;
+
+            // Only create the rectangle once for the player
+            rectangle1 = new Rectangle((int)player.Posicion.X,
+            (int)player.Posicion.Y,
+            player.Ancho,
+            player.Alto);
+
+            // Do the collision between the player and the enemies
+            for (int i = 0; i < Enemigos.Count; i++)
+            {
+                rectangle2 = new Rectangle((int)Enemigos[i].Posicion.X,
+                (int)Enemigos[i].Posicion.Y,
+                Enemigos[i].Ancho,
+                Enemigos[i].Alto);
+
+                // Determine if the two objects collided with each
+                // other
+                if (rectangle1.Intersects(rectangle2))
+                {
+                    // Subtract the health from the player based on
+                    // the enemy damage
+                    player.Vida -= Enemigos[i].Danios;
+
+                    // Since the enemy collided with the player
+                    // destroy it
+                    Enemigos[i].Vida = 0;
+
+                    // If the player health is less than zero we died
+                    if (player.Vida <= 0)
+                        player.Activo = false;
+                }
+
+            }
+
+            // Projectile vs Enemy Collision
+            for (int i = 0; i < Proyectiles.Count; i++)
+            {
+                for (int j = 0; j < Enemigos.Count; j++)
+                {
+                    // Create the rectangles we need to determine if we collided with each other
+                    rectangle1 = new Rectangle((int)Proyectiles[i].Posicion.X -
+                    Proyectiles[i].Ancho / 2, (int)Proyectiles[i].Posicion.Y -
+                    Proyectiles[i].Alto / 2, Proyectiles[i].Ancho, Proyectiles[i].Alto);
+
+                    rectangle2 = new Rectangle((int)Enemigos[j].Posicion.X - Enemigos[j].Ancho / 2,
+                    (int)Enemigos[j].Posicion.Y - Enemigos[j].Alto / 2,
+                    Enemigos[j].Ancho, Enemigos[j].Alto);
+
+                    // Determine if the two objects collided with each other
+                    if (rectangle1.Intersects(rectangle2))
+                    {
+                        Enemigos[j].Vida -= Proyectiles[i].Danios;
+                        Proyectiles[i].Activo = false;
+                    }
+                }
+            }
+        }
+
+
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin();
-            
-            // Fondos
-            FondoPrincipal.Draw(this.spriteBatch);
-            bgLayer1.Draw(spriteBatch);
-            bgLayer2.Draw(spriteBatch);
 
-            Personaje.Draw(this.spriteBatch);
-            foreach (var Enemigo in Enemigos)
+            spriteBatch.Begin();
+            spriteBatch.Draw(fondoEstatico, Vector2.Zero, Color.White);
+
+            fondoCapa1.Draw(spriteBatch);
+            fondoCapa2.Draw(spriteBatch);
+
+            player.Draw(spriteBatch);
+
+            for (int i = 0; i < Enemigos.Count; i++)
             {
-                Enemigo.Draw(this.spriteBatch);
+                Enemigos[i].Draw(spriteBatch);
             }
 
+            for (int i = 0; i < Proyectiles.Count; i++)
+            {
+                Proyectiles[i].Draw(spriteBatch);
+            }
+
+            for (int i = 0; i < Explosiones.Count; i++)
+            {
+                Explosiones[i].Draw(spriteBatch);
+            }
+
+            spriteBatch.DrawString(font, "Puntaje: " + score, new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y), Color.White);
+            spriteBatch.DrawString(font, "Vida: " + player.Vida, new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y + 30), Color.White);
+
+            // Por algún motivo por cada frame hay que llamar a .Begin y .End del spritebatch para que termine de dibujar...
             spriteBatch.End();
 
             base.Draw(gameTime);
-        }
-
-        private void NuevoEnemigo(string Textura = "mineAnimation")
-        {
-            var R = new Random(DateTime.Now.Millisecond);
-            Vector2 posicionAleatoria = new Vector2(R.Next(0, GraphicsDevice.Viewport.Width), R.Next(0, GraphicsDevice.Viewport.Height));
-            var Enemigo = new ObjetoDibujableAnimado(Content.Load<Texture2D>(Textura), posicionAleatoria);
-            var AnimacionEnemigo = new Animacion();
-            AnimacionEnemigo.Initialize(Enemigo.Textura, Vector2.Zero, 47, 61, 8, 30, Color.White, 1f, true);
-            Enemigo.AnimacionObjeto = AnimacionEnemigo;
-            Enemigos.Add(Enemigo);
         }
     }
 }

@@ -1,7 +1,6 @@
-ï»¿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+// Animation.cs
+//Using declarations
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,99 +9,101 @@ namespace Shooter
 {
     class Animacion
     {
-        // Esta imagen contiene la colecciÃ³n completa de sprites (la imagen con todos los sprites)
-        Texture2D spriteStrip;
-        // La escala que se le aplica a la imagen de sprites
-        float scale;
-        // El tiempo desde que se actualizÃ³ el Ãºltimo sprite
-        int elapsedTime;
-        // El tiempo durante el cual se muestra un sprite antes del prÃ³ximo
-        int frameTime;
-        // El nÃºmero de sprites que contiene la imagen
-        int frameCount;
-        // El Ã­ndice del sprite que se muestra actualmente
-        int currentFrame;
-        // El color del sprite que estamos mostrando, esto es Ãºtil si se quieren hacer efectos como que se vuelva rojo si colisiona.
-        Color color;
-        // El Ã¡rea de la tira de imÃ¡genes que queremos mostrar
-        Rectangle sourceRect = new Rectangle();
-        // El area donde queremos dibujar la tira de imÃ¡genes en el juego.
-        Rectangle destinationRect = new Rectangle();
-        // Ancho del sprite
-        public int FrameWidth;
-        // Alto del sprite (frame)
-        public int FrameHeight;
-        // El estado de la animaciÃ³n
-        public bool Active;
-        // Vamos a loopear o se reproduce una vez y se queda quieto?
-        public bool Looping;
-        // PosiciÃ³n, para que era esto?!? (Por que se duplicaba?)
-        public Vector2 Position;
+        // Textura donde estan TODOS los sprites en orden y donde todos tienen el MISMO ANCHO
+        Texture2D TexturaSprites;
 
-        public void Initialize(Texture2D texture, Vector2 position,
-        int frameWidth, int frameHeight, int frameCount,
-        int frametime, Color color, float scale, bool looping)
+        // Escala que se aplica a cada sprite
+        float Escala;
+
+        // Cuanto tiempo pasó desde el último cambio de frames? (Se usa con la variable siguiente)
+        int TiempoTranscurrido;
+
+        // Cuanto tiempo transcurre entre frame y frame? Esto siempre va a ser una subestimación
+        int TiempoEntreFrames;
+
+        // Cuantos frames hay en total? El ancho total de la imagen debería ser esta variable * ancho de cada frame
+        int FramesEnLaImagen;
+
+        // El índice del frame que se está mostrando en un momento dado
+        int FrameActual;
+
+        // Esto es porque se pueden aplicar efectos de color a los frames, como que se ponga rojo si le pegan.
+        Color color;
+
+        // La parte de la textura que se quiere dibujar
+        Rectangle RectanguloOrigen = new Rectangle();
+
+        // El area donde se quiere dibujar el frame en la ventana
+        Rectangle RectanguloDestino = new Rectangle();
+
+        // Útiles para pasar de un frame a otro dentro de una imagen con muchos sprites o frames
+        public int AnchoFrame;
+        public int AltoFrame;
+
+        public bool Activo;
+
+        // Determina si se repite por siempre la animación
+        public bool Repetir;
+
+        public Vector2 Posicion;
+
+        public void Inicializar(Texture2D texture, Vector2 position,
+            int frameWidth, int frameHeight, int frameCount,
+            int frametime, Color color, float scale, bool looping)
         {
             this.color = color;
-            this.FrameWidth = frameWidth;
-            this.FrameHeight = frameHeight;
-            this.frameCount = frameCount;
-            this.frameTime = frametime;
-            this.scale = scale;
+            this.AnchoFrame = frameWidth;
+            this.AltoFrame = frameHeight;
+            this.FramesEnLaImagen = frameCount;
+            this.TiempoEntreFrames = frametime;
+            this.Escala = scale;
 
-            Looping = looping;
-            Position = position;
-            spriteStrip = texture;
+            Repetir = looping;
+            Posicion = position;
+            TexturaSprites = texture;
 
-            // Ponemos el tiempo en cero.
-            elapsedTime = 0;
-            currentFrame = 0;
+            TiempoTranscurrido = 0;
+            FrameActual = 0;
 
-            // Por defecto las animaciones estÃ¡n activas.
-            Active = true;
+            Activo = true;
         }
+
         public void Update(GameTime gameTime)
         {
-            // Do not update the game if we are not active
-            if (!Active) return;
+            if (!Activo) return;
 
-            // Update the elapsed time
-            elapsedTime += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
+            // Se actualiza el tiempo transcurrido, gameTime ya viene desde Game1 y se calcula solo
+            TiempoTranscurrido += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            // If the elapsed time is larger than the frame time
-            // we need to switch frames
-            if (elapsedTime > frameTime)
+            // Si el tiempo transcurrido es mayor al tiempo entre frame y frame, hay que cambiarlo y resetearlo
+            if (TiempoTranscurrido > TiempoEntreFrames)
             {
-                // Move to the next frame
-                currentFrame++;
-
-                // If the currentFrame is equal to frameCount reset currentFrame to zero
-                if (currentFrame == frameCount)
+                FrameActual++;
+                // Si el frame actual es igual a la cantidad total de frames, se resetea el actual
+                if (FrameActual == FramesEnLaImagen)
                 {
-                    currentFrame = 0;
-                    // If we are not looping deactivate the animation
-                    if (Looping == false)
-                        Active = false;
+                    FrameActual = 0;
+                    if (!Repetir) Activo = false;
                 }
-
-                // Reset the elapsed time to zero
-                elapsedTime = 0;
+                TiempoTranscurrido = 0;
             }
 
-            // Grab the correct frame in the image strip by multiplying the currentFrame index by the frame width
-            sourceRect = new Rectangle(currentFrame * FrameWidth, 0, FrameWidth, FrameHeight);
+            // El frame correcto se saca de multiplicar el frame actual por el ancho de cada sprite
+            // O sea que tienen que ser todos iguales
+            RectanguloOrigen = new Rectangle(FrameActual * AnchoFrame, 0, AnchoFrame, AltoFrame);
 
-            // Grab the correct frame in the image strip by multiplying the currentFrame index by the frame width
-            destinationRect = new Rectangle((int)Position.X - (int)(FrameWidth * scale) / 2,
-            (int)Position.Y - (int)(FrameHeight * scale) / 2,
-            (int)(FrameWidth * scale),
-            (int)(FrameHeight * scale));
+            // El frame correcto se saca de multiplicar el frame actual por el ancho de cada sprite
+            // O sea que tienen que ser todos iguales
+            RectanguloDestino = new Rectangle((int)Posicion.X - (int)(AnchoFrame * Escala) / 2,
+            (int)Posicion.Y - (int)(AltoFrame * Escala) / 2,
+            (int)(AnchoFrame * Escala),
+            (int)(AltoFrame * Escala));
         }
-        // Draw the Animation Strip
+
         public void Draw(SpriteBatch spriteBatch)
         {
-            // Only draw the animation when we are active
-            if (Active) spriteBatch.Draw(spriteStrip, destinationRect, sourceRect, color);
+            if (Activo)
+                spriteBatch.Draw(TexturaSprites, RectanguloDestino, RectanguloOrigen, color);
         }
     }
 }

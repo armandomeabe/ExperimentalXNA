@@ -1,13 +1,15 @@
-ï»¿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+// ParallaxingBackground.cs
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Shooter
 {
+    /// <summary>
+    /// Esta clase viene del tutorial de XNA 2D: http://xbox.create.msdn.com/en-US/education/tutorial/2dgame/getting_started
+    /// Es la que hace el efecto interesante con los dos fondos movibles mas el fondo estático de atrás.
+    /// </summary>
     class ParallaxingBackground
     {
         // The image representing the parallaxing background
@@ -23,11 +25,17 @@ namespace Shooter
         {
             // Load the background texture we will be using
             texture = content.Load<Texture2D>(texturePath);
+
+
             // Set the speed of the background
             this.speed = speed;
+
+
             // If we divide the screen with the texture width then we can determine the number of tiles need.
             // We add 1 to it so that we won't have a gap in the tiling
             positions = new Vector2[screenWidth / texture.Width + 1];
+
+
             // Set the initial positions of the parallaxing background
             for (int i = 0; i < positions.Length; i++)
             {
@@ -35,6 +43,7 @@ namespace Shooter
                 positions[i] = new Vector2(i * texture.Width, 0);
             }
         }
+
         public void Update()
         {
             // Update the positions of the background
@@ -52,6 +61,7 @@ namespace Shooter
                     }
                 }
 
+
                 // If the speed has the background moving to the right
                 else
                 {
@@ -63,6 +73,7 @@ namespace Shooter
                 }
             }
         }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             for (int i = 0; i < positions.Length; i++)
