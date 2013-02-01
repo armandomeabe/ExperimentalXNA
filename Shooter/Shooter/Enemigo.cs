@@ -31,7 +31,7 @@ namespace Shooter
             get { return AnimacionEnemigo.AltoFrame; }
         }
 
-        float VelocidadMovimiento;
+        public float VelocidadMovimiento;
         
 
         public void Inicializar(Animacion animacion, Vector2 posicion, ContentManager content)

@@ -19,22 +19,19 @@ namespace Shooter
         Vector2[] positions;
 
         // The speed which the background is moving
-        int speed;
+        public float speed;
 
-        public void Initialize(ContentManager content, String texturePath, int screenWidth, int speed)
+        public void Initialize(ContentManager content, String texturePath, int screenWidth, float speed)
         {
             // Load the background texture we will be using
             texture = content.Load<Texture2D>(texturePath);
 
-
             // Set the speed of the background
             this.speed = speed;
-
 
             // If we divide the screen with the texture width then we can determine the number of tiles need.
             // We add 1 to it so that we won't have a gap in the tiling
             positions = new Vector2[screenWidth / texture.Width + 1];
-
 
             // Set the initial positions of the parallaxing background
             for (int i = 0; i < positions.Length; i++)

@@ -83,6 +83,13 @@ namespace Shooter
             };
             Window.AllowUserResizing = true;
             Content.RootDirectory = "Content";
+
+            Window.ClientSizeChanged += new EventHandler<EventArgs>(Window_ClientSizeChanged);
+        }
+
+        void Window_ClientSizeChanged(object sender, EventArgs e)
+        {
+            InicializarFondos();
         }
 
         /// <summary>
@@ -114,18 +121,23 @@ namespace Shooter
             DisparosFrecuencia = TimeSpan.FromSeconds(.15f);
 
             Explosiones = new List<Animacion>();
-
             score = 0;
-
             pause = false;
-
             gameOver = false;
-
             timer = new TimeSpan(0);
-
             totalTime = "";
-
             base.Initialize();
+        }
+
+        private void InicializarFondos()
+        {
+            // Texturas de fondos y objetos jugables
+            fondoCapa1.Initialize(Content, "bgLayer1", GraphicsDevice.Viewport.Width, -1);
+            fondoCapa2.Initialize(Content, "bgLayer2", GraphicsDevice.Viewport.Width, -2);
+            fondoEstatico = Content.Load<Texture2D>("mainbackground");
+            texturaEnemigo = Content.Load<Texture2D>("mineAnimation");
+            TexturaProyectil = Content.Load<Texture2D>("laser");
+            texturaExplosion = Content.Load<Texture2D>("explosion");
         }
 
         protected override void LoadContent()
@@ -142,13 +154,7 @@ namespace Shooter
             + GraphicsDevice.Viewport.TitleSafeArea.Height / 2);
             player.Inicializar(AnimacionPersonaje, PosicionPersonaje);
 
-            // Texturas de fondos y objetos jugables
-            fondoCapa1.Initialize(Content, "bgLayer1", GraphicsDevice.Viewport.Width, -1);
-            fondoCapa2.Initialize(Content, "bgLayer2", GraphicsDevice.Viewport.Width, -2);
-            fondoEstatico = Content.Load<Texture2D>("mainbackground");
-            texturaEnemigo = Content.Load<Texture2D>("mineAnimation");
-            TexturaProyectil = Content.Load<Texture2D>("laser");
-            texturaExplosion = Content.Load<Texture2D>("explosion");
+            InicializarFondos();
 
             // Partículas
             List<Texture2D> textures = new List<Texture2D>()
@@ -211,6 +217,7 @@ namespace Shooter
             // Actualizar enemigos
             for (int i = Enemigos.Count - 1; i >= 0; i--)
             {
+                Enemigos[i].VelocidadMovimiento = -1 * fondoCapa1.speed * 2;
                 Enemigos[i].Update(gameTime);
                 if (!Enemigos[i].Activo)
                 {
@@ -270,6 +277,19 @@ namespace Shooter
             particleEngine.EmitterLocation = new Vector2(player.Posicion.X, player.Posicion.Y);
             particleEngine.Update();
 
+            if (estadoActualGamePad.Triggers.Left > 0 || estadoActualDelTeclado.IsKeyDown(Keys.S))
+            {
+                fondoCapa1.speed = fondoCapa1.speed * (1.0f + estadoActualGamePad.Triggers.Left/5);
+                fondoCapa2.speed = fondoCapa2.speed * (1.0f + estadoActualGamePad.Triggers.Left/5);
+            }
+            if (fondoCapa1.speed < -5)
+            {
+                fondoCapa1.speed += 0.29f;
+            }
+            if (fondoCapa2.speed < -8)
+            {
+                fondoCapa2.speed += 0.29f;
+            }
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || estadoActualDelTeclado.IsKeyDown(Keys.Q))
                 this.Exit();
@@ -284,8 +304,7 @@ namespace Shooter
             estadoActualGamePad = GamePad.GetState(PlayerIndex.One);
 
             //Cambia la flag cuando se presiona pausa y pausa o reproduce la música de fondo
-            if (estadoActualDelTeclado.IsKeyDown(Keys.P) ||
-            estadoActualGamePad.Buttons.Start == ButtonState.Pressed)
+            if (estadoActualDelTeclado.IsKeyDown(Keys.P) || estadoActualGamePad.Buttons.Start == ButtonState.Pressed)
             {
                 pause = !pause;
                 if (pause && !gameOver)
@@ -320,8 +339,7 @@ namespace Shooter
             }
 
             //Para debuggear - Tecla N reinicia el juego
-            if (estadoActualDelTeclado.IsKeyDown(Keys.N) ||
-            estadoActualGamePad.Buttons.X == ButtonState.Pressed)
+            if (estadoActualDelTeclado.IsKeyDown(Keys.N) || estadoActualGamePad.Buttons.X == ButtonState.Pressed)
             {
                 pause = gameOver = false;
                 player.Activo = true;
@@ -377,8 +395,19 @@ namespace Shooter
             player.Posicion.X = MathHelper.Clamp(player.Posicion.X, 0, GraphicsDevice.Viewport.Width - player.Ancho);
             player.Posicion.Y = MathHelper.Clamp(player.Posicion.Y, 0, GraphicsDevice.Viewport.Height - player.Alto);
 
+            var shoots = estadoActualGamePad.Triggers.Right;
+            if (shoots.Equals(1.0f) || estadoActualDelTeclado.IsKeyDown(Keys.D)) shoots += 30; // MEGA MEGA SHOOT!!
+            for (int i = 0; i < shoots; i++)
+            {
+                // Actualiza el tiempo de cuando se disparó por última vez
+                DisparoTiempoDeUltimaAparicion = gameTime.TotalGameTime;
+                // Nuevo proyectil en la parte delantera de la navecita
+                Disparar(player.Posicion + new Vector2(player.Ancho / 2, random.Next(-5, 5)));
+                // Piiuuu!!
+                SonidoLaser.Play();
+            }
 
-            if (estadoActualGamePad.Buttons.A.Equals(ButtonState.Pressed) || estadoActualDelTeclado.IsKeyDown(Keys.Space))
+            if (estadoActualGamePad.Buttons.A.Equals(ButtonState.Pressed) || estadoActualDelTeclado.IsKeyDown(Keys.A))
                 if (Proyectiles.Count <= 10) // FORMA DE ARMANDO
                 {
                     // Actualiza el tiempo de cuando se disparó por última vez
@@ -388,7 +417,7 @@ namespace Shooter
                     // Piiuuu!!
                     SonidoLaser.Play();
                 }
-            if (estadoActualGamePad.Buttons.B.Equals(ButtonState.Pressed) || estadoActualDelTeclado.IsKeyDown(Keys.LeftShift) || estadoActualDelTeclado.IsKeyDown(Keys.RightShift))
+            if (estadoActualGamePad.Buttons.B.Equals(ButtonState.Pressed) || estadoActualDelTeclado.IsKeyDown(Keys.LeftShift) || estadoActualDelTeclado.IsKeyDown(Keys.W))
                 if (gameTime.TotalGameTime - DisparoTiempoDeUltimaAparicion > DisparosFrecuencia) // FORMA DE MAXI
                 {
                     // Actualiza el tiempo de cuando se disparó por última vez
