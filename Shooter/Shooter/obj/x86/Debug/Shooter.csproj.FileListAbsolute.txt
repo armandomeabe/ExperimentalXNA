@@ -94,3 +94,8 @@ D:\repos\ExperimentalXNA\Shooter\Shooter\obj\x86\Debug\ResolveAssemblyReference.
 D:\repos\ExperimentalXNA\Shooter\Shooter\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
 D:\repos\ExperimentalXNA\Shooter\Shooter\obj\x86\Debug\Shooter.exe
 D:\repos\ExperimentalXNA\Shooter\Shooter\obj\x86\Debug\Shooter.pdb
+D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\circle.xnb
+D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\diamond.xnb
+D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\star.xnb
+D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\ammo.xnb
+D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Spark.xnb

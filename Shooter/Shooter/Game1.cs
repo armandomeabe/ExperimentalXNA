@@ -14,6 +14,9 @@ namespace Shooter
 {
     public class Game1 : Microsoft.Xna.Framework.Game
     {
+        // Partículas!!!!
+        ParticleEngine particleEngine;
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
@@ -73,7 +76,12 @@ namespace Shooter
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferWidth = 800,
+                PreferredBackBufferHeight = 480
+            };
+            Window.AllowUserResizing = true;
             Content.RootDirectory = "Content";
         }
 
@@ -134,17 +142,24 @@ namespace Shooter
             + GraphicsDevice.Viewport.TitleSafeArea.Height / 2);
             player.Inicializar(AnimacionPersonaje, PosicionPersonaje);
 
+            // Texturas de fondos y objetos jugables
             fondoCapa1.Initialize(Content, "bgLayer1", GraphicsDevice.Viewport.Width, -1);
             fondoCapa2.Initialize(Content, "bgLayer2", GraphicsDevice.Viewport.Width, -2);
-
             fondoEstatico = Content.Load<Texture2D>("mainbackground");
-
             texturaEnemigo = Content.Load<Texture2D>("mineAnimation");
-
             TexturaProyectil = Content.Load<Texture2D>("laser");
-
             texturaExplosion = Content.Load<Texture2D>("explosion");
 
+            // Partículas
+            List<Texture2D> textures = new List<Texture2D>()
+            {
+                Content.Load<Texture2D>("spark"),
+                //Content.Load<Texture2D>("star"),
+                //Content.Load<Texture2D>("diamond")
+            };
+            particleEngine = new ParticleEngine(textures, new Vector2(400, 240));
+
+            // Sonidos
             MusicaEnJuego = Content.Load<Song>("sound/gameMusic");
             SonidoLaser = Content.Load<SoundEffect>("sound/laserFire");
             SonidoExplosion = Content.Load<SoundEffect>("sound/explosion");
@@ -176,12 +191,12 @@ namespace Shooter
 
         private void AgregarEnemigo()
         {
-            Animacion AnimacionEnemigo = new Animacion();
+            var AnimacionEnemigo = new Animacion();
             AnimacionEnemigo.Inicializar(texturaEnemigo, Vector2.Zero, 47, 61, 8, 30, Color.White, 1f, true);
-            Vector2 Posicion = new Vector2(GraphicsDevice.Viewport.Width + texturaEnemigo.Width / 2, random.Next(100, GraphicsDevice.Viewport.Height - 100));
+            var Posicion = new Vector2(GraphicsDevice.Viewport.Width + texturaEnemigo.Width / 2, random.Next(100, GraphicsDevice.Viewport.Height - 100));
 
             var Enemigo = new Enemigo();
-            Enemigo.Inicializar(AnimacionEnemigo, Posicion);
+            Enemigo.Inicializar(AnimacionEnemigo, Posicion, Content);
             Enemigos.Add(Enemigo);
         }
 
@@ -252,6 +267,9 @@ namespace Shooter
 
         protected override void Update(GameTime gameTime)
         {
+            particleEngine.EmitterLocation = new Vector2(player.Posicion.X, player.Posicion.Y);
+            particleEngine.Update();
+
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || estadoActualDelTeclado.IsKeyDown(Keys.Q))
                 this.Exit();
@@ -466,10 +484,13 @@ namespace Shooter
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin();
-            spriteBatch.Draw(fondoEstatico, Vector2.Zero, Color.White);
+            //spriteBatch.Draw(fondoEstatico, Vector2.Zero, Color.White,);
+            spriteBatch.Draw(fondoEstatico, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
 
-            fondoCapa1.Draw(spriteBatch);
-            fondoCapa2.Draw(spriteBatch);
+            fondoCapa1.Draw(spriteBatch, GraphicsDevice);
+            fondoCapa2.Draw(spriteBatch, GraphicsDevice);
+
+            particleEngine.Draw(spriteBatch);
 
             player.Draw(spriteBatch);
 
@@ -497,9 +518,9 @@ namespace Shooter
             else
             {
                 gameOver = true;
-                spriteBatch.DrawString(font, "Puntaje Total: " + score, new Vector2(GraphicsDevice.Viewport.Width/2 - 300, GraphicsDevice.Viewport.Height/2 - 15), Color.White);
-                spriteBatch.DrawString(font, "Tiempo Total: " + totalTime, new Vector2(GraphicsDevice.Viewport.Width/2 - 300, GraphicsDevice.Viewport.Height / 2 + 15), Color.White);
-                spriteBatch.DrawString(font, "Presione N para\njugar nuevamente", new Vector2(GraphicsDevice.Viewport.Width/2 - 300, GraphicsDevice.Viewport.Height / 2 + 45), Color.Red);
+                spriteBatch.DrawString(font, "Puntaje Total: " + score, new Vector2(GraphicsDevice.Viewport.Width / 2 - 300, GraphicsDevice.Viewport.Height / 2 - 15), Color.White);
+                spriteBatch.DrawString(font, "Tiempo Total: " + totalTime, new Vector2(GraphicsDevice.Viewport.Width / 2 - 300, GraphicsDevice.Viewport.Height / 2 + 15), Color.White);
+                spriteBatch.DrawString(font, "Presione N para\njugar nuevamente", new Vector2(GraphicsDevice.Viewport.Width / 2 - 300, GraphicsDevice.Viewport.Height / 2 + 45), Color.Red);
             }
 
             // Por algún motivo por cada frame hay que llamar a .Begin y .End del spritebatch para que termine de dibujar...

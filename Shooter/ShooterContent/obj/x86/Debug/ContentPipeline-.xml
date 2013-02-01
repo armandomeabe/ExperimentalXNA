@@ -147,6 +147,51 @@
       <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\gameFont.xnb</Output>
       <Time>2011-04-01T09:42:38-03:00</Time>
     </Item>
+    <Item>
+      <Source>circle.png</Source>
+      <Name>circle</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\circle.xnb</Output>
+      <Time>2013-02-01T16:08:26.9341039-03:00</Time>
+    </Item>
+    <Item>
+      <Source>diamond.png</Source>
+      <Name>diamond</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\diamond.xnb</Output>
+      <Time>2013-02-01T16:08:26.9361403-03:00</Time>
+    </Item>
+    <Item>
+      <Source>star.png</Source>
+      <Name>star</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\star.xnb</Output>
+      <Time>2013-02-01T16:08:26.938103-03:00</Time>
+    </Item>
+    <Item>
+      <Source>ammo.png</Source>
+      <Name>ammo</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\ammo.xnb</Output>
+      <Time>2013-02-01T16:35:12.4010668-03:00</Time>
+    </Item>
+    <Item>
+      <Source>Spark.png</Source>
+      <Name>Spark</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Spark.xnb</Output>
+      <Time>2013-02-01T17:30:47.9128855-03:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <ContentProjectGUID Null="true" />

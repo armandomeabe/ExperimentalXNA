@@ -74,11 +74,13 @@ namespace Shooter
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, GraphicsDevice graphics)
         {
             for (int i = 0; i < positions.Length; i++)
             {
                 spriteBatch.Draw(texture, positions[i], Color.White);
+                //spriteBatch.Draw(texture, new Rectangle((int)positions[i].X, (int)positions[i].Y, graphics.Viewport.Width, graphics.Viewport.Height), Color.White);
+
             }
         }
     }

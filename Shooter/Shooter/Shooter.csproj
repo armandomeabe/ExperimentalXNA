@@ -111,6 +111,8 @@
     <Compile Include="Animacion.cs" />
     <Compile Include="Enemigo.cs" />
     <Compile Include="ParallaxingBackground.cs" />
+    <Compile Include="Particle.cs" />
+    <Compile Include="ParticleEngine.cs" />
     <Compile Include="Personaje.cs" />
     <Compile Include="Projectil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
