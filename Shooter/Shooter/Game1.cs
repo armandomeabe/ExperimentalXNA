@@ -29,6 +29,9 @@ namespace Shooter
 
         Texture2D fondoEstatico;
 
+        //String para ver el tiempo total de juego
+        string totalTime;
+
         // Fondos "Parallax" whatever that means :P
         ParallaxingBackground fondoCapa1;
         ParallaxingBackground fondoCapa2;
@@ -63,8 +66,10 @@ namespace Shooter
         int score;
         SpriteFont font;
 
-        //Bandera para Pausa
+        //Bandera para Pausa y gameOver
         bool pause;
+        bool gameOver;
+        TimeSpan timer;
 
         public Game1()
         {
@@ -105,6 +110,12 @@ namespace Shooter
             score = 0;
 
             pause = false;
+
+            gameOver = false;
+
+            timer = new TimeSpan(0);
+
+            totalTime = "";
 
             base.Initialize();
         }
@@ -195,7 +206,6 @@ namespace Shooter
                         AddExplosion(Enemigos[i].Posicion);
                         // Boom audible!
                         SonidoExplosion.Play();
-                        score += Enemigos[i].Puntos;
                     }
                     // Eliminar el enemigo caído en acción
                     Enemigos.RemoveAt(i);
@@ -242,7 +252,8 @@ namespace Shooter
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || estadoActualDelTeclado.IsKeyDown(Keys.Q))
                 this.Exit();
 
             // Esto es medio al vicio por ahora:
@@ -259,7 +270,7 @@ namespace Shooter
             estadoActualGamePad.Buttons.Start == ButtonState.Pressed)
             {
                 pause = !pause;
-                if (pause)
+                if (pause && !gameOver)
                 {
                     MediaPlayer.Pause();
                 }
@@ -270,7 +281,7 @@ namespace Shooter
             }
 
             //Si está en pausa no actualiza nada
-            if (pause == false)
+            if (!pause && !gameOver)
             {
                 ActualizarPersonaje(gameTime);
 
@@ -282,7 +293,23 @@ namespace Shooter
                 ActualizarProyectiles();
                 ActualizarExplosiones(gameTime);
 
+                EnemigoFrecuenciaSpawn = TimeSpan.FromSeconds(1.0f * random.Next(30));
+
+                timer += gameTime.ElapsedGameTime;
+                totalTime = timer.ToString(@"mm\:ss");
+
                 base.Update(gameTime);
+            }
+
+            //Para debuggear - Tecla N reinicia el juego
+            if (estadoActualDelTeclado.IsKeyDown(Keys.N) ||
+            estadoActualGamePad.Buttons.X == ButtonState.Pressed)
+            {
+                pause = gameOver = false;
+                player.Activo = true;
+                player.Vida = 0;
+                score = 0;
+                timer = new TimeSpan(0);
             }
 
         }
@@ -425,6 +452,9 @@ namespace Shooter
                     {
                         Enemigos[j].Vida -= Proyectiles[i].Danios;
                         Proyectiles[i].Activo = false;
+                        //El puntaje se suma sólo si el enemigo es alcanzado por un proyectil y su vida es 0
+                        if (Enemigos[j].Vida == 0)
+                            score += Enemigos[j].Puntos;
                     }
                 }
             }
@@ -458,13 +488,25 @@ namespace Shooter
                 Explosiones[i].Draw(spriteBatch);
             }
 
-            spriteBatch.DrawString(font, "Puntaje: " + score, new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y), Color.White);
-            spriteBatch.DrawString(font, "Vida: " + player.Vida, new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y + 30), Color.White);
+            if (player.Activo)
+            {
+                spriteBatch.DrawString(font, "Puntaje: " + score, new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y), Color.White);
+                spriteBatch.DrawString(font, "Vida: " + player.Vida, new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y + 30), Color.White);
+                spriteBatch.DrawString(font, "Tiempo: " + totalTime, new Vector2(GraphicsDevice.Viewport.Width - 190, GraphicsDevice.Viewport.TitleSafeArea.Y), Color.White);
+            }
+            else
+            {
+                gameOver = true;
+                spriteBatch.DrawString(font, "Puntaje Total: " + score, new Vector2(GraphicsDevice.Viewport.Width/2 - 300, GraphicsDevice.Viewport.Height/2 - 15), Color.White);
+                spriteBatch.DrawString(font, "Tiempo Total: " + totalTime, new Vector2(GraphicsDevice.Viewport.Width/2 - 300, GraphicsDevice.Viewport.Height / 2 + 15), Color.White);
+                spriteBatch.DrawString(font, "Presione N para\njugar nuevamente", new Vector2(GraphicsDevice.Viewport.Width/2 - 300, GraphicsDevice.Viewport.Height / 2 + 45), Color.Red);
+            }
 
             // Por algún motivo por cada frame hay que llamar a .Begin y .End del spritebatch para que termine de dibujar...
             spriteBatch.End();
 
             base.Draw(gameTime);
         }
+
     }
 }
