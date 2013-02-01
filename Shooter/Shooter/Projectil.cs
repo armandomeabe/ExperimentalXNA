@@ -38,9 +38,9 @@ namespace Shooter
         {
             // Los proyectiles siempre se mueven hacia la derecha
             Posicion.X += VelocidadDeMovimiento;
+            //Posicion.Y += (new Random(DateTime.Now.Millisecond).Next(-1, 1)); // No queda muy bueno...
 
-            // Si se van de la pantalla los desactivo
-            // TODO: Lógica para borrarlos entonces de la lista!
+            // Si se van de la pantalla los desactivo para que después se borren del vector.
             if (Posicion.X + Textura.Width / 2 > viewport.Width)
                 Activo = false;
         }

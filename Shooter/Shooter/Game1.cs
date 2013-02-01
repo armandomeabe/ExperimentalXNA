@@ -90,13 +90,13 @@ namespace Shooter
             Enemigos = new List<Enemigo>();
 
             EnemigoTiempoDeUltimaAparicion = TimeSpan.Zero;
-            EnemigoFrecuenciaSpawn = TimeSpan.FromSeconds(1.0f); 
+            EnemigoFrecuenciaSpawn = TimeSpan.FromSeconds(1.0f);
 
             random = new Random();
 
             Proyectiles = new List<Projectil>();
             DisparosFrecuencia = TimeSpan.FromSeconds(.15f);
-            
+
             Explosiones = new List<Animacion>();
 
             score = 0;
@@ -230,8 +230,6 @@ namespace Shooter
             }
         }
 
-
-
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
@@ -309,18 +307,27 @@ namespace Shooter
             player.Posicion.X = MathHelper.Clamp(player.Posicion.X, 0, GraphicsDevice.Viewport.Width - player.Ancho);
             player.Posicion.Y = MathHelper.Clamp(player.Posicion.Y, 0, GraphicsDevice.Viewport.Height - player.Alto);
 
-            // Disparar entre determinado intervalo
-            if (gameTime.TotalGameTime - DisparoTiempoDeUltimaAparicion > DisparosFrecuencia)
-            {
-                // Actualiza el tiempo de cuando se disparó por última vez
-                DisparoTiempoDeUltimaAparicion = gameTime.TotalGameTime;
 
-                // Nuevo proyectil en la parte delantera de la navecita
-                Disparar(player.Posicion + new Vector2(player.Ancho / 2, 0));
-
-                // Piiuuu!!
-                SonidoLaser.Play();
-            }
+            if (estadoActualGamePad.Buttons.A.Equals(ButtonState.Pressed) || estadoActualDelTeclado.IsKeyDown(Keys.Space))
+                if (Proyectiles.Count <= 10) // FORMA DE ARMANDO
+                {
+                    // Actualiza el tiempo de cuando se disparó por última vez
+                    DisparoTiempoDeUltimaAparicion = gameTime.TotalGameTime;
+                    // Nuevo proyectil en la parte delantera de la navecita
+                    Disparar(player.Posicion + new Vector2(player.Ancho / 2, random.Next(-5, 5)));
+                    // Piiuuu!!
+                    SonidoLaser.Play();
+                }
+            if (estadoActualGamePad.Buttons.B.Equals(ButtonState.Pressed) || estadoActualDelTeclado.IsKeyDown(Keys.LeftShift))
+                if (gameTime.TotalGameTime - DisparoTiempoDeUltimaAparicion > DisparosFrecuencia) // FORMA DE MAXI
+                {
+                    // Actualiza el tiempo de cuando se disparó por última vez
+                    DisparoTiempoDeUltimaAparicion = gameTime.TotalGameTime;
+                    // Nuevo proyectil en la parte delantera de la navecita
+                    Disparar(player.Posicion + new Vector2(player.Ancho / 2, random.Next(-5, 5)));
+                    // Piiuuu!!
+                    SonidoLaser.Play();
+                }
 
             // En vez de morirte reseteás la vida
             if (player.Vida <= 0)
