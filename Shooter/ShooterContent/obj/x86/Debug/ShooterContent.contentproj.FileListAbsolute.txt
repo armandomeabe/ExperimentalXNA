@@ -2,3 +2,4 @@ C:\Users\ArmandoAndres\Downloads\Shooter_Project_Windows\Shooter\Shooter\Shooter
 D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\Shooter\ShooterContent\obj\x86\Debug\ShooterContent.contentprojResolveAssemblyReference.cache
 D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\ShooterContent\obj\x86\Debug\ShooterContent.contentprojResolveAssemblyReference.cache
 D:\repos\ExperimentalXNA\Shooter\ShooterContent\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\ArmandoAndres\Desktop\Nueva carpeta\Shooter\ShooterContent\obj\x86\Debug\ShooterContent.contentprojResolveAssemblyReference.cache

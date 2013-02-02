@@ -12,7 +12,7 @@ namespace Shooter
         public Texture2D Textura;
         public Vector2 Posicion;
         public bool Activo;
-        public int Danios;
+        public int DaniosQueCausa;
         Viewport viewport;
         public int Ancho
         {
@@ -24,13 +24,13 @@ namespace Shooter
         }
         float VelocidadDeMovimiento;
 
-        public void Inicializar(Viewport viewport, Texture2D textura, Vector2 posicion)
+        public Projectil(Viewport viewport, Texture2D textura, Vector2 posicion)
         {
             Textura = textura;
-            Posicion = posicion;
+            Posicion = new Vector2(posicion.X, posicion.Y + (new Random(DateTime.Now.Millisecond).Next(-15,15)));
             this.viewport = viewport;
             Activo = true;
-            Danios = 2;
+            DaniosQueCausa = 2;
             VelocidadDeMovimiento = 20f;
         }
 

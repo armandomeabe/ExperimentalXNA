@@ -32,14 +32,13 @@ namespace Shooter
         }
 
         public float VelocidadMovimiento;
-        
 
-        public void Inicializar(Animacion animacion, Vector2 posicion, ContentManager content)
+        public void Inicializar(Animacion animacion, ContentManager content)
         {
             AnimacionEnemigo = animacion;
-            Posicion = posicion;
+            Posicion = animacion.Posicion;
             Activo = true;
-            Vida = 10;
+            Vida = 100;
             Danios = 10;
             VelocidadMovimiento = 6f;
             Puntos = 100;

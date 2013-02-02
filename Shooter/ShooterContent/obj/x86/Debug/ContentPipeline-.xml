@@ -101,53 +101,6 @@
       <Time>2011-04-01T09:42:38-03:00</Time>
     </Item>
     <Item>
-      <Source>Sound\explosion.wav</Source>
-      <Name>Sound\explosion</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-      <Options>None</Options>
-      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Sound\explosion.xnb</Output>
-      <Time>2011-04-01T09:42:38-03:00</Time>
-    </Item>
-    <Item>
-      <Source>Sound\laserFire.wav</Source>
-      <Name>Sound\laserFire</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-      <Options>None</Options>
-      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Sound\laserFire.xnb</Output>
-      <Time>2011-04-01T09:42:38-03:00</Time>
-    </Item>
-    <Item>
-      <Source>Sound\gameMusic.mp3</Source>
-      <Name>Sound\gameMusic</Name>
-      <Importer>Mp3Importer</Importer>
-      <Processor>SongProcessor</Processor>
-      <Options>None</Options>
-      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Sound\gameMusic.xnb</Output>
-      <Extra>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Sound\gameMusic.wma</Extra>
-      <Time>2011-04-01T09:42:38-03:00</Time>
-    </Item>
-    <Item>
-      <Source>Sound\menuMusic.mp3</Source>
-      <Name>Sound\menuMusic</Name>
-      <Importer>Mp3Importer</Importer>
-      <Processor>SongProcessor</Processor>
-      <Options>None</Options>
-      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Sound\menuMusic.xnb</Output>
-      <Extra>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Sound\menuMusic.wma</Extra>
-      <Time>2011-04-01T09:42:38-03:00</Time>
-    </Item>
-    <Item>
-      <Source>gameFont.spritefont</Source>
-      <Name>gameFont</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-      <Options>None</Options>
-      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\gameFont.xnb</Output>
-      <Time>2011-04-01T09:42:38-03:00</Time>
-    </Item>
-    <Item>
       <Source>circle.png</Source>
       <Name>circle</Name>
       <Importer>TextureImporter</Importer>
@@ -236,6 +189,71 @@
       <Options>None</Options>
       <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Floor1extraWide.xnb</Output>
       <Time>2013-02-02T15:21:39.2758829-03:00</Time>
+    </Item>
+    <Item>
+      <Source>bloodc.png</Source>
+      <Name>bloodc</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\bloodc.xnb</Output>
+      <Time>2013-02-02T15:48:52.0793515-03:00</Time>
+    </Item>
+    <Item>
+      <Source>buildings.png</Source>
+      <Name>buildings</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\buildings.xnb</Output>
+      <Time>2013-02-02T17:35:14.2941936-03:00</Time>
+    </Item>
+    <Item>
+      <Source>Sound\explosion.wav</Source>
+      <Name>Sound\explosion</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Sound\explosion.xnb</Output>
+      <Time>2011-04-01T09:42:38-03:00</Time>
+    </Item>
+    <Item>
+      <Source>Sound\laserFire.wav</Source>
+      <Name>Sound\laserFire</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Sound\laserFire.xnb</Output>
+      <Time>2011-04-01T09:42:38-03:00</Time>
+    </Item>
+    <Item>
+      <Source>Sound\gameMusic.mp3</Source>
+      <Name>Sound\gameMusic</Name>
+      <Importer>Mp3Importer</Importer>
+      <Processor>SongProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Sound\gameMusic.xnb</Output>
+      <Extra>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Sound\gameMusic.wma</Extra>
+      <Time>2011-04-01T09:42:38-03:00</Time>
+    </Item>
+    <Item>
+      <Source>Sound\menuMusic.mp3</Source>
+      <Name>Sound\menuMusic</Name>
+      <Importer>Mp3Importer</Importer>
+      <Processor>SongProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Sound\menuMusic.xnb</Output>
+      <Extra>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Sound\menuMusic.wma</Extra>
+      <Time>2011-04-01T09:42:38-03:00</Time>
+    </Item>
+    <Item>
+      <Source>gameFont.spritefont</Source>
+      <Name>gameFont</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\gameFont.xnb</Output>
+      <Time>2013-02-02T16:15:11.2349742-03:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>

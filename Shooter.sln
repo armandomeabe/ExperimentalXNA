@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shooter", "Shooter\Shooter\Shooter.csproj", "{2AB65AB6-AC81-43F2-B43F-069C858E423C}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "ShooterContent", "Shooter\ShooterContent\ShooterContent.contentproj", "{301A0986-067D-486C-9FDE-689861944A3A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShooterContent", "Shooter\ShooterContent\ShooterContent.contentproj", "{301A0986-067D-486C-9FDE-689861944A3A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

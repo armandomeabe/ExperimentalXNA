@@ -14,8 +14,10 @@ namespace Shooter
 {
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        // Partículas!!!!
-        ParticleEngine particleEngine;
+        //box2d
+        Box2DX.Common.Vec2 gravedad = new Box2DX.Common.Vec2(0f, -10.0f);
+        Box2DX.Dynamics.World world = new Box2DX.Dynamics.World(new Box2DX.Collision.AABB(), new Box2DX.Common.Vec2(0f, -10.0f), true);
+
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -27,8 +29,6 @@ namespace Shooter
 
         GamePadState estadoActualGamePad;
         GamePadState estadoPrevioGamePad;
-
-        float velocidadPersonaje;
 
         //String para ver el tiempo total de juego
         string totalTime;
@@ -44,7 +44,9 @@ namespace Shooter
 
         // Enemigos
         Texture2D texturaEnemigo;
+        Texture2D texturaEnemigoTerrestre;
         List<Enemigo> Enemigos;
+        List<Enemigo> EnemigosTerrestres;
 
         // La frecuencia en que aparecen los enemigos
         TimeSpan EnemigoFrecuenciaSpawn;
@@ -52,19 +54,11 @@ namespace Shooter
 
         Random random;
 
-        Texture2D TexturaProyectil;
-        List<Projectil> Proyectiles;
-
-        // El rate de disparo del personaje
-        TimeSpan DisparosFrecuencia;
-        TimeSpan DisparoTiempoDeUltimaAparicion;
-
         // Lista de texturas de una explosión
         Texture2D texturaExplosion;
         List<Animacion> Explosiones;
 
         // Sonidos
-        SoundEffect SonidoLaser;
         SoundEffect SonidoExplosion;
         Song MusicaEnJuego;
 
@@ -108,7 +102,6 @@ namespace Shooter
 
             //Initialize the player class
             player = new Personaje();
-            velocidadPersonaje = 8.0f;
 
             //Enable the FreeDrag gesture. -->> Esto parece que sirve si jugás en un Windows Phone o algo con touch.
             TouchPanel.EnabledGestures = GestureType.FreeDrag;
@@ -118,14 +111,12 @@ namespace Shooter
             tierraFirme = new ParallaxingBackground();
 
             Enemigos = new List<Enemigo>();
+            EnemigosTerrestres = new List<Enemigo>();
 
             EnemigoTiempoDeUltimaAparicion = TimeSpan.Zero;
             EnemigoFrecuenciaSpawn = TimeSpan.FromSeconds(1.0f);
 
             random = new Random();
-
-            Proyectiles = new List<Projectil>();
-            DisparosFrecuencia = TimeSpan.FromSeconds(.15f);
 
             Explosiones = new List<Animacion>();
             score = 0;
@@ -141,11 +132,11 @@ namespace Shooter
             // Texturas de fondos y objetos jugables
             fondoCapa1.Initialize(Content, "bgLayer1extraWide", GraphicsDevice.Viewport.Width, -1);
             fondoCapa2.Initialize(Content, "bgLayer2extraWide", GraphicsDevice.Viewport.Width, -2);
-            tierraFirme.Initialize(Content, "Floor1extraWide", GraphicsDevice.Viewport.Width, -2, 150);
+            tierraFirme.Initialize(Content, "Floor1extraWide", GraphicsDevice.Viewport.Width, -3.5f, 150);
             fondoEstatico = Content.Load<Texture2D>("mainbackground");
             fondoMenuPrincipal = Content.Load<Texture2D>("mainMenuTall");
             texturaEnemigo = Content.Load<Texture2D>("mineAnimation");
-            TexturaProyectil = Content.Load<Texture2D>("laser");
+            texturaEnemigoTerrestre = Content.Load<Texture2D>("buildings");
             texturaExplosion = Content.Load<Texture2D>("explosion");
         }
 
@@ -158,25 +149,14 @@ namespace Shooter
             Texture2D TexturaPersonaje = Content.Load<Texture2D>("shipAnimation");
             AnimacionPersonaje.Inicializar(TexturaPersonaje, Vector2.Zero, 115, 69, 8, 30, Color.White, 1f, true);
 
-
             Vector2 PosicionPersonaje = new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y
             + GraphicsDevice.Viewport.TitleSafeArea.Height / 2);
-            player.Inicializar(AnimacionPersonaje, PosicionPersonaje);
+            player.Inicializar(AnimacionPersonaje, PosicionPersonaje, Content, GraphicsDevice);
 
             InicializarFondos();
 
-            // Partículas
-            List<Texture2D> textures = new List<Texture2D>()
-            {
-                Content.Load<Texture2D>("spark"),
-                //Content.Load<Texture2D>("star"),
-                //Content.Load<Texture2D>("diamond")
-            };
-            particleEngine = new ParticleEngine(textures, new Vector2(400, 240));
-
             // Sonidos
             MusicaEnJuego = Content.Load<Song>("sound/gameMusic");
-            SonidoLaser = Content.Load<SoundEffect>("sound/laserFire");
             SonidoExplosion = Content.Load<SoundEffect>("sound/explosion");
             font = Content.Load<SpriteFont>("gameFont");
             PlayMusic(MusicaEnJuego);
@@ -207,12 +187,23 @@ namespace Shooter
         private void AgregarEnemigo()
         {
             var AnimacionEnemigo = new Animacion();
-            AnimacionEnemigo.Inicializar(texturaEnemigo, Vector2.Zero, 47, 61, 8, 30, Color.White, 1f, true);
             var Posicion = new Vector2(GraphicsDevice.Viewport.Width + texturaEnemigo.Width / 2, random.Next(100, GraphicsDevice.Viewport.Height - 100));
+            AnimacionEnemigo.Inicializar(texturaEnemigo, Posicion, 47, 61, 8, 30, Color.White, 1f, true);
 
             var Enemigo = new Enemigo();
-            Enemigo.Inicializar(AnimacionEnemigo, Posicion, Content);
+            Enemigo.Inicializar(AnimacionEnemigo, Content);
             Enemigos.Add(Enemigo);
+        }
+
+        private void AgregarEnemigoTerrestre()
+        {
+            var AnimacionEnemigo = new Animacion();
+            var Posicion = new Vector2(800, random.Next(400,480));
+            AnimacionEnemigo.Inicializar(texturaEnemigoTerrestre, Posicion, 100, 138, 1, 1, Color.White, .5f, true);
+
+            var Enemigo = new Enemigo();
+            Enemigo.Inicializar(AnimacionEnemigo, Content);
+            EnemigosTerrestres.Add(Enemigo);
         }
 
         private void ActualizarEnemigos(GameTime gameTime)
@@ -222,6 +213,10 @@ namespace Shooter
                 EnemigoTiempoDeUltimaAparicion = gameTime.TotalGameTime;
                 AgregarEnemigo();
             }
+
+            if (((int)random.Next(0, 50)).Equals(10))
+                AgregarEnemigoTerrestre();
+
 
             // Actualizar enemigos
             for (int i = Enemigos.Count - 1; i >= 0; i--)
@@ -242,6 +237,25 @@ namespace Shooter
                     Enemigos.RemoveAt(i);
                 }
             }
+
+            for (int i = EnemigosTerrestres.Count - 1; i >= 0; i--)
+            {
+                EnemigosTerrestres[i].VelocidadMovimiento = -1 * tierraFirme.speed;
+                EnemigosTerrestres[i].Update(gameTime);
+                if (!EnemigosTerrestres[i].Activo)
+                {
+                    // Si no está activo y la vida es menor o igual a 0
+                    if (EnemigosTerrestres[i].Vida <= 0)
+                    {
+                        // Boom!
+                        AddExplosion(EnemigosTerrestres[i].Posicion);
+                        // Boom audible!
+                        SonidoExplosion.Play();
+                    }
+                    // Eliminar el enemigo caído en acción
+                    EnemigosTerrestres.RemoveAt(i);
+                }
+            }
         }
 
         private void ActualizarExplosiones(GameTime gameTime)
@@ -256,26 +270,6 @@ namespace Shooter
             }
         }
 
-        private void Disparar(Vector2 Posicion)
-        {
-            Projectil projectile = new Projectil();
-            projectile.Inicializar(GraphicsDevice.Viewport, TexturaProyectil, Posicion);
-            Proyectiles.Add(projectile);
-        }
-
-        private void ActualizarProyectiles()
-        {
-            // Update the Projectiles
-            for (int i = Proyectiles.Count - 1; i >= 0; i--)
-            {
-                Proyectiles[i].Update();
-                if (Proyectiles[i].Activo == false)
-                {
-                    Proyectiles.RemoveAt(i);
-                }
-            }
-        }
-
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
@@ -283,9 +277,6 @@ namespace Shooter
 
         protected override void Update(GameTime gameTime)
         {
-            particleEngine.EmitterLocation = new Vector2(player.Posicion.X, player.Posicion.Y);
-            particleEngine.Update();
-
             if (estadoActualDelTeclado.IsKeyDown(Keys.S))
             {
                 fondoCapa1.AlterSpeed(1.2f);
@@ -334,7 +325,7 @@ namespace Shooter
 
                 ActualizarEnemigos(gameTime);
                 UpdateCollision();
-                ActualizarProyectiles();
+                player.ActualizarProyectiles();
                 ActualizarExplosiones(gameTime);
 
                 EnemigoFrecuenciaSpawn = TimeSpan.FromSeconds(1.0f * random.Next(30));
@@ -354,98 +345,11 @@ namespace Shooter
                 score = 0;
                 timer = new TimeSpan(0);
             }
-
         }
 
         private void ActualizarPersonaje(GameTime gameTime)
         {
-            player.Update(gameTime);
-
-            // Windows Phone Controls
-            while (TouchPanel.IsGestureAvailable)
-            {
-                GestureSample gesture = TouchPanel.ReadGesture();
-                if (gesture.GestureType == GestureType.FreeDrag)
-                {
-                    player.Posicion += gesture.Delta;
-                }
-            }
-
-            // Analógico
-            player.Posicion.X += estadoActualGamePad.ThumbSticks.Left.X * velocidadPersonaje;
-            player.Posicion.Y -= estadoActualGamePad.ThumbSticks.Left.Y * velocidadPersonaje;
-
-            // Teclado / Dpad
-            if (estadoActualDelTeclado.IsKeyDown(Keys.Left) ||
-            estadoActualGamePad.DPad.Left == ButtonState.Pressed)
-            {
-                player.Posicion.X -= velocidadPersonaje;
-            }
-            if (estadoActualDelTeclado.IsKeyDown(Keys.Right) ||
-            estadoActualGamePad.DPad.Right == ButtonState.Pressed)
-            {
-                player.Posicion.X += velocidadPersonaje;
-            }
-            if (estadoActualDelTeclado.IsKeyDown(Keys.Up) ||
-            estadoActualGamePad.DPad.Up == ButtonState.Pressed)
-            {
-                player.Posicion.Y -= velocidadPersonaje;
-            }
-            if (estadoActualDelTeclado.IsKeyDown(Keys.Down) ||
-            estadoActualGamePad.DPad.Down == ButtonState.Pressed)
-            {
-                player.Posicion.Y += velocidadPersonaje;
-            }
-
-
-            // Evitar que el personaje salga de la ventana
-            player.Posicion.X = MathHelper.Clamp(player.Posicion.X, 0, GraphicsDevice.Viewport.Width - player.Ancho);
-            player.Posicion.Y = MathHelper.Clamp(player.Posicion.Y, 0, GraphicsDevice.Viewport.Height - player.Alto);
-
-            var shoots = estadoActualGamePad.Triggers.Right;
-            if (shoots > 0 && shoots < 0.2f) shoots = 1;
-            else if (shoots >= 0.2f && shoots < 0.5f) shoots = 3;
-            else if (shoots >= 0.5f && shoots < 1.0f) shoots = 6;
-            else if (shoots.Equals(1.0f) || estadoActualDelTeclado.IsKeyDown(Keys.D)) shoots += 30; // MEGA MEGA SHOOT!!
-
-            for (int i = 0; i < shoots; i++)
-            {
-                // Actualiza el tiempo de cuando se disparó por última vez
-                DisparoTiempoDeUltimaAparicion = gameTime.TotalGameTime;
-                // Nuevo proyectil en la parte delantera de la navecita
-                Disparar(player.Posicion + new Vector2(player.Ancho / 2, random.Next(-15, 15)));
-                // Piiuuu!!
-                SonidoLaser.Play();
-            }
-
-            if (estadoActualGamePad.Buttons.A.Equals(ButtonState.Pressed) || estadoActualDelTeclado.IsKeyDown(Keys.A))
-                if (Proyectiles.Count <= 10) // FORMA DE ARMANDO
-                {
-                    // Actualiza el tiempo de cuando se disparó por última vez
-                    DisparoTiempoDeUltimaAparicion = gameTime.TotalGameTime;
-                    // Nuevo proyectil en la parte delantera de la navecita
-                    Disparar(player.Posicion + new Vector2(player.Ancho / 2, random.Next(-5, 5)));
-                    // Piiuuu!!
-                    SonidoLaser.Play();
-                }
-            if (estadoActualGamePad.Buttons.B.Equals(ButtonState.Pressed) || estadoActualDelTeclado.IsKeyDown(Keys.LeftShift) || estadoActualDelTeclado.IsKeyDown(Keys.W))
-                if (gameTime.TotalGameTime - DisparoTiempoDeUltimaAparicion > DisparosFrecuencia) // FORMA DE MAXI
-                {
-                    // Actualiza el tiempo de cuando se disparó por última vez
-                    DisparoTiempoDeUltimaAparicion = gameTime.TotalGameTime;
-                    // Nuevo proyectil en la parte delantera de la navecita
-                    Disparar(player.Posicion + new Vector2(player.Ancho / 2, random.Next(-5, 5)));
-                    // Piiuuu!!
-                    SonidoLaser.Play();
-                }
-
-            // En vez de morirte reseteás la vida
-            if (player.Vida <= 0)
-            {
-                player.Vida = 100;
-                score = 0;
-            }
-
+            player.Update(gameTime, estadoActualGamePad, estadoActualDelTeclado, GraphicsDevice);
         }
 
         /// <summary>
@@ -491,15 +395,32 @@ namespace Shooter
 
             }
 
+            for (int i = 0; i < EnemigosTerrestres.Count; i++)
+            {
+                rectangle2 = new Rectangle((int)EnemigosTerrestres[i].Posicion.X,
+                (int)EnemigosTerrestres[i].Posicion.Y,
+                EnemigosTerrestres[i].Ancho,
+                EnemigosTerrestres[i].Alto);
+
+                if (rectangle1.Intersects(rectangle2))
+                {
+                    player.Vida -= EnemigosTerrestres[i].Danios;
+                    EnemigosTerrestres[i].Vida = 0;
+                    if (player.Vida <= 0)
+                        player.Activo = false;
+                }
+
+            }
+
             // Projectile vs Enemy Collision
-            for (int i = 0; i < Proyectiles.Count; i++)
+            for (int i = 0; i < player.Proyectiles.Count; i++)
             {
                 for (int j = 0; j < Enemigos.Count; j++)
                 {
                     // Create the rectangles we need to determine if we collided with each other
-                    rectangle1 = new Rectangle((int)Proyectiles[i].Posicion.X -
-                    Proyectiles[i].Ancho / 2, (int)Proyectiles[i].Posicion.Y -
-                    Proyectiles[i].Alto / 2, Proyectiles[i].Ancho, Proyectiles[i].Alto);
+                    rectangle1 = new Rectangle((int)player.Proyectiles[i].Posicion.X -
+                    player.Proyectiles[i].Ancho / 2, (int)player.Proyectiles[i].Posicion.Y -
+                    player.Proyectiles[i].Alto / 2, player.Proyectiles[i].Ancho, player.Proyectiles[i].Alto);
 
                     rectangle2 = new Rectangle((int)Enemigos[j].Posicion.X - Enemigos[j].Ancho / 2,
                     (int)Enemigos[j].Posicion.Y - Enemigos[j].Alto / 2,
@@ -508,11 +429,32 @@ namespace Shooter
                     // Determine if the two objects collided with each other
                     if (rectangle1.Intersects(rectangle2))
                     {
-                        Enemigos[j].Vida -= Proyectiles[i].Danios;
-                        Proyectiles[i].Activo = false;
+                        Enemigos[j].Vida -= player.Proyectiles[i].DaniosQueCausa;
+                        player.Proyectiles[i].Activo = false;
                         //El puntaje se suma sólo si el enemigo es alcanzado por un proyectil y su vida es 0
                         if (Enemigos[j].Vida == 0)
                             score += Enemigos[j].Puntos;
+                    }
+                }
+                for (int j = 0; j < EnemigosTerrestres.Count; j++)
+                {
+                    // Create the rectangles we need to determine if we collided with each other
+                    rectangle1 = new Rectangle((int)player.Proyectiles[i].Posicion.X -
+                    player.Proyectiles[i].Ancho / 2, (int)player.Proyectiles[i].Posicion.Y -
+                    player.Proyectiles[i].Alto / 2, player.Proyectiles[i].Ancho, player.Proyectiles[i].Alto);
+
+                    rectangle2 = new Rectangle((int)EnemigosTerrestres[j].Posicion.X - EnemigosTerrestres[j].Ancho / 2,
+                    (int)EnemigosTerrestres[j].Posicion.Y - EnemigosTerrestres[j].Alto / 2,
+                    EnemigosTerrestres[j].Ancho, EnemigosTerrestres[j].Alto);
+
+                    // Determine if the two objects collided with each other
+                    if (rectangle1.Intersects(rectangle2))
+                    {
+                        EnemigosTerrestres[j].Vida -= player.Proyectiles[i].DaniosQueCausa;
+                        player.Proyectiles[i].Activo = false;
+                        //El puntaje se suma sólo si el enemigo es alcanzado por un proyectil y su vida es 0
+                        if (EnemigosTerrestres[j].Vida == 0)
+                            score += EnemigosTerrestres[j].Puntos;
                     }
                 }
             }
@@ -538,17 +480,11 @@ namespace Shooter
 
                 tierraFirme.Draw(spriteBatch, GraphicsDevice);
 
-                particleEngine.Draw(spriteBatch);
                 player.Draw(spriteBatch);
 
-                for (int i = 0; i < Enemigos.Count; i++)
+                foreach (var enemigo in (from enemigos in Enemigos.Concat(EnemigosTerrestres) select enemigos))
                 {
-                    Enemigos[i].Draw(spriteBatch);
-                }
-
-                for (int i = 0; i < Proyectiles.Count; i++)
-                {
-                    Proyectiles[i].Draw(spriteBatch);
+                    enemigo.Draw(spriteBatch);
                 }
 
                 for (int i = 0; i < Explosiones.Count; i++)
@@ -556,10 +492,10 @@ namespace Shooter
                     Explosiones[i].Draw(spriteBatch);
                 }
 
-
                 spriteBatch.DrawString(font, "Puntaje: " + score, new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y), Color.White);
-                spriteBatch.DrawString(font, "Vida: " + player.Vida, new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y + 30), Color.White);
-                spriteBatch.DrawString(font, "Tiempo: " + totalTime, new Vector2(GraphicsDevice.Viewport.Width - 190, GraphicsDevice.Viewport.TitleSafeArea.Y), Color.White);
+                spriteBatch.DrawString(font, "Vida: " + player.Vida, new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y + 20), Color.White);
+                spriteBatch.DrawString(font, "Tiempo: " + totalTime, new Vector2(GraphicsDevice.Viewport.Width - 110, GraphicsDevice.Viewport.TitleSafeArea.Y), Color.White);
+                spriteBatch.DrawString(font, "Municiones: " + player.municiones, new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y + 40), Color.White);
             }
             else
             {
