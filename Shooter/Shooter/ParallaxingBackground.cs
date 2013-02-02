@@ -44,11 +44,21 @@ namespace Shooter
 
         public void AlterSpeed(float factor)
         {
-            speed *= factor;
+            speed -= factor;
         }
 
         public void Update()
         {
+            // Esto es así porque la velocidad tiene que 'tender' a regresar a initialSpeed pero podría estar moviéndose
+            // para la derecha o para la izquierda.
+            if (speed != initialSpeed)
+            {
+                if (speed > initialSpeed)
+                    speed -= .25f;
+                else
+                    speed += .25f;
+            }
+
             // Update the positions of the background
             for (int i = 0; i < positions.Length; i++)
             {

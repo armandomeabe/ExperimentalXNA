@@ -282,9 +282,11 @@ namespace Shooter
                 fondoCapa1.AlterSpeed(1.2f);
                 fondoCapa2.AlterSpeed(1.2f);
             }
-            fondoCapa1.AlterSpeed(1f + estadoActualGamePad.Triggers.Left);
-            fondoCapa2.AlterSpeed(1f + estadoActualGamePad.Triggers.Left);
-
+            if (estadoActualGamePad.Triggers.Left > 0)
+            {
+                fondoCapa1.AlterSpeed(1f + estadoActualGamePad.Triggers.Left / 5);
+                fondoCapa2.AlterSpeed(1f + estadoActualGamePad.Triggers.Left / 5);
+            }
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || estadoActualDelTeclado.IsKeyDown(Keys.Q))
                 this.Exit();
 
