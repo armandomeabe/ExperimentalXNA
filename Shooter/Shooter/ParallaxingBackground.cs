@@ -18,8 +18,9 @@ namespace Shooter
         // An array of positions of the parallaxing background
         Vector2[] positions;
 
-        // The speed which the background is moving
-        public float speed;
+        // Ahora agregué initialSpeed para que cuando se acelere el fondo sepa hasta donde tiene que ir bajando la velocidad
+        public float speed { get; private set; }
+        public float initialSpeed { get; private set; }
 
         public void Initialize(ContentManager content, String texturePath, int screenWidth, float speed)
         {
@@ -27,7 +28,7 @@ namespace Shooter
             texture = content.Load<Texture2D>(texturePath);
 
             // Set the speed of the background
-            this.speed = speed;
+            speed = initialSpeed = speed;
 
             // If we divide the screen with the texture width then we can determine the number of tiles need.
             // We add 1 to it so that we won't have a gap in the tiling
@@ -41,6 +42,11 @@ namespace Shooter
             }
         }
 
+        public void AlterSpeed(float factor)
+        {
+            speed *= factor;
+        }
+
         public void Update()
         {
             // Update the positions of the background
@@ -52,20 +58,19 @@ namespace Shooter
                 if (speed <= 0)
                 {
                     // Check the texture is out of view then put that texture at the end of the screen
-                    if (positions[i].X <= -texture.Width)
+                    if (positions[i].X <= -texture.Width/2)
                     {
-                        positions[i].X = texture.Width * (positions.Length - 1);
+                        positions[i].X = (texture.Width/2) * (positions.Length - 1);
                     }
                 }
-
 
                 // If the speed has the background moving to the right
                 else
                 {
                     // Check if the texture is out of view then position it to the start of the screen
-                    if (positions[i].X >= texture.Width * (positions.Length - 1))
+                    if (positions[i].X >= (texture.Width/2) * (positions.Length - 1))
                     {
-                        positions[i].X = -texture.Width;
+                        positions[i].X = -(texture.Width/2);
                     }
                 }
             }

@@ -192,6 +192,24 @@
       <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Spark.xnb</Output>
       <Time>2013-02-01T17:30:47.9128855-03:00</Time>
     </Item>
+    <Item>
+      <Source>bgLayer2extraWide.png</Source>
+      <Name>bgLayer2extraWide</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\bgLayer2extraWide.xnb</Output>
+      <Time>2013-02-02T13:11:52.1479757-03:00</Time>
+    </Item>
+    <Item>
+      <Source>bgLayer1extraWide.png</Source>
+      <Name>bgLayer1extraWide</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\bgLayer1extraWide.xnb</Output>
+      <Time>2013-02-02T13:15:36.612656-03:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <ContentProjectGUID Null="true" />

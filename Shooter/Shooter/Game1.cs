@@ -132,8 +132,8 @@ namespace Shooter
         private void InicializarFondos()
         {
             // Texturas de fondos y objetos jugables
-            fondoCapa1.Initialize(Content, "bgLayer1", GraphicsDevice.Viewport.Width, -1);
-            fondoCapa2.Initialize(Content, "bgLayer2", GraphicsDevice.Viewport.Width, -2);
+            fondoCapa1.Initialize(Content, "bgLayer1extraWide", GraphicsDevice.Viewport.Width, -1);
+            fondoCapa2.Initialize(Content, "bgLayer2extraWide", GraphicsDevice.Viewport.Width, -2);
             fondoEstatico = Content.Load<Texture2D>("mainbackground");
             texturaEnemigo = Content.Load<Texture2D>("mineAnimation");
             TexturaProyectil = Content.Load<Texture2D>("laser");
@@ -277,19 +277,13 @@ namespace Shooter
             particleEngine.EmitterLocation = new Vector2(player.Posicion.X, player.Posicion.Y);
             particleEngine.Update();
 
-            if (estadoActualGamePad.Triggers.Left > 0 || estadoActualDelTeclado.IsKeyDown(Keys.S))
+            if (estadoActualDelTeclado.IsKeyDown(Keys.S))
             {
-                fondoCapa1.speed = fondoCapa1.speed * (1.0f + estadoActualGamePad.Triggers.Left/5);
-                fondoCapa2.speed = fondoCapa2.speed * (1.0f + estadoActualGamePad.Triggers.Left/5);
+                fondoCapa1.AlterSpeed(1.2f);
+                fondoCapa2.AlterSpeed(1.2f);
             }
-            if (fondoCapa1.speed < -5)
-            {
-                fondoCapa1.speed += 0.29f;
-            }
-            if (fondoCapa2.speed < -8)
-            {
-                fondoCapa2.speed += 0.29f;
-            }
+            fondoCapa1.AlterSpeed(1f + estadoActualGamePad.Triggers.Left);
+            fondoCapa2.AlterSpeed(1f + estadoActualGamePad.Triggers.Left);
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || estadoActualDelTeclado.IsKeyDown(Keys.Q))
                 this.Exit();
@@ -396,13 +390,17 @@ namespace Shooter
             player.Posicion.Y = MathHelper.Clamp(player.Posicion.Y, 0, GraphicsDevice.Viewport.Height - player.Alto);
 
             var shoots = estadoActualGamePad.Triggers.Right;
-            if (shoots.Equals(1.0f) || estadoActualDelTeclado.IsKeyDown(Keys.D)) shoots += 30; // MEGA MEGA SHOOT!!
+            if (shoots > 0 && shoots < 0.2f) shoots = 1;
+            else if (shoots >= 0.2f && shoots < 0.5f) shoots = 3;
+            else if (shoots >= 0.5f && shoots < 1.0f) shoots = 6;
+            else if (shoots.Equals(1.0f) || estadoActualDelTeclado.IsKeyDown(Keys.D)) shoots += 30; // MEGA MEGA SHOOT!!
+
             for (int i = 0; i < shoots; i++)
             {
                 // Actualiza el tiempo de cuando se disparó por última vez
                 DisparoTiempoDeUltimaAparicion = gameTime.TotalGameTime;
                 // Nuevo proyectil en la parte delantera de la navecita
-                Disparar(player.Posicion + new Vector2(player.Ancho / 2, random.Next(-5, 5)));
+                Disparar(player.Posicion + new Vector2(player.Ancho / 2, random.Next(-15, 15)));
                 // Piiuuu!!
                 SonidoLaser.Play();
             }
