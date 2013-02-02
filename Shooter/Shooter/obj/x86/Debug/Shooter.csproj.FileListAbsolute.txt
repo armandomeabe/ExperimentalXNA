@@ -145,3 +145,4 @@ C:\Users\ArmandoAndres\Desktop\Nueva carpeta\Shooter\Shooter\bin\x86\Debug\Box2D
 C:\Users\ArmandoAndres\Desktop\Nueva carpeta\Shooter\Shooter\bin\x86\Debug\Content\buildings.xnb
 D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\buildings.xnb
 D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Box2DX.pdb
+D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\minibullet.xnb

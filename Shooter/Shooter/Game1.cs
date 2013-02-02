@@ -191,7 +191,7 @@ namespace Shooter
             AnimacionEnemigo.Inicializar(texturaEnemigo, Posicion, 47, 61, 8, 30, Color.White, 1f, true);
 
             var Enemigo = new Enemigo();
-            Enemigo.Inicializar(AnimacionEnemigo, Content);
+            Enemigo.Inicializar(AnimacionEnemigo, Content, GraphicsDevice);
             Enemigos.Add(Enemigo);
         }
 
@@ -202,7 +202,7 @@ namespace Shooter
             AnimacionEnemigo.Inicializar(texturaEnemigoTerrestre, Posicion, 100, 138, 1, 1, Color.White, .5f, true);
 
             var Enemigo = new Enemigo();
-            Enemigo.Inicializar(AnimacionEnemigo, Content);
+            Enemigo.Inicializar(AnimacionEnemigo, Content, GraphicsDevice, true);
             EnemigosTerrestres.Add(Enemigo);
         }
 
@@ -410,6 +410,21 @@ namespace Shooter
                         player.Activo = false;
                 }
 
+            }
+
+            // Proyectiles enemigos contra el personaje
+            // Linq: De los enemigos y los enemigos terrestres seleccionar sus proyectiles
+            foreach (var proyectiles in (from e in Enemigos.Concat(EnemigosTerrestres) select e.proyectiles))
+            {
+                foreach (var proyectil in proyectiles)
+                {
+                    if (rectangle1.Intersects(new Rectangle((int)proyectil.Posicion.X, (int)proyectil.Posicion.Y,(int)proyectil.Ancho, (int)proyectil.Alto)))
+                    {
+                        player.Vida -= proyectil.DaniosQueCausa;
+                        proyectil.Activo = false;
+                        SonidoExplosion.Play();
+                    }
+                }
             }
 
             // Projectile vs Enemy Collision
