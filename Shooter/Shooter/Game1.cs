@@ -30,14 +30,17 @@ namespace Shooter
 
         float velocidadPersonaje;
 
-        Texture2D fondoEstatico;
-
         //String para ver el tiempo total de juego
         string totalTime;
+
+        // Fondos
+        Texture2D fondoEstatico;
+        Texture2D fondoMenuPrincipal;
 
         // Fondos "Parallax" whatever that means :P
         ParallaxingBackground fondoCapa1;
         ParallaxingBackground fondoCapa2;
+        ParallaxingBackground tierraFirme;
 
         // Enemigos
         Texture2D texturaEnemigo;
@@ -100,6 +103,9 @@ namespace Shooter
         /// </summary>
         protected override void Initialize()
         {
+            // El juego empieza pausado y muestra el fondo.
+            pause = true;
+
             //Initialize the player class
             player = new Personaje();
             velocidadPersonaje = 8.0f;
@@ -109,6 +115,7 @@ namespace Shooter
 
             fondoCapa1 = new ParallaxingBackground();
             fondoCapa2 = new ParallaxingBackground();
+            tierraFirme = new ParallaxingBackground();
 
             Enemigos = new List<Enemigo>();
 
@@ -134,7 +141,9 @@ namespace Shooter
             // Texturas de fondos y objetos jugables
             fondoCapa1.Initialize(Content, "bgLayer1extraWide", GraphicsDevice.Viewport.Width, -1);
             fondoCapa2.Initialize(Content, "bgLayer2extraWide", GraphicsDevice.Viewport.Width, -2);
+            tierraFirme.Initialize(Content, "Floor1extraWide", GraphicsDevice.Viewport.Width, -2, 150);
             fondoEstatico = Content.Load<Texture2D>("mainbackground");
+            fondoMenuPrincipal = Content.Load<Texture2D>("mainMenuTall");
             texturaEnemigo = Content.Load<Texture2D>("mineAnimation");
             TexturaProyectil = Content.Load<Texture2D>("laser");
             texturaExplosion = Content.Load<Texture2D>("explosion");
@@ -217,7 +226,7 @@ namespace Shooter
             // Actualizar enemigos
             for (int i = Enemigos.Count - 1; i >= 0; i--)
             {
-                Enemigos[i].VelocidadMovimiento = -1 * fondoCapa1.speed * 2;
+                Enemigos[i].VelocidadMovimiento = -1 * fondoCapa2.speed * 4;
                 Enemigos[i].Update(gameTime);
                 if (!Enemigos[i].Activo)
                 {
@@ -286,6 +295,7 @@ namespace Shooter
             {
                 fondoCapa1.AlterSpeed(1f + estadoActualGamePad.Triggers.Left / 5);
                 fondoCapa2.AlterSpeed(1f + estadoActualGamePad.Triggers.Left / 5);
+                tierraFirme.AlterSpeed(1f + estadoActualGamePad.Triggers.Left / 5);
             }
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || estadoActualDelTeclado.IsKeyDown(Keys.Q))
                 this.Exit();
@@ -320,6 +330,7 @@ namespace Shooter
 
                 fondoCapa1.Update();
                 fondoCapa2.Update();
+                tierraFirme.Update();
 
                 ActualizarEnemigos(gameTime);
                 UpdateCollision();
@@ -511,35 +522,41 @@ namespace Shooter
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
             spriteBatch.Begin();
-            //spriteBatch.Draw(fondoEstatico, Vector2.Zero, Color.White,);
-            spriteBatch.Draw(fondoEstatico, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
 
-            fondoCapa1.Draw(spriteBatch, GraphicsDevice);
-            fondoCapa2.Draw(spriteBatch, GraphicsDevice);
-
-            particleEngine.Draw(spriteBatch);
-
-            player.Draw(spriteBatch);
-
-            for (int i = 0; i < Enemigos.Count; i++)
-            {
-                Enemigos[i].Draw(spriteBatch);
+            if (pause || gameOver)
+            {   // Si estamos en pausa solo dibujo el fondo de menú principal y termina el método.
+                spriteBatch.Draw(fondoMenuPrincipal, Vector2.Zero, Color.White);
             }
-
-            for (int i = 0; i < Proyectiles.Count; i++)
+            if (player.Activo && !(pause || gameOver))
             {
-                Proyectiles[i].Draw(spriteBatch);
-            }
+                spriteBatch.Draw(fondoEstatico, Vector2.Zero, Color.White);
+                //spriteBatch.Draw(fondoEstatico, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
 
-            for (int i = 0; i < Explosiones.Count; i++)
-            {
-                Explosiones[i].Draw(spriteBatch);
-            }
+                fondoCapa1.Draw(spriteBatch, GraphicsDevice);
+                fondoCapa2.Draw(spriteBatch, GraphicsDevice);
 
-            if (player.Activo)
-            {
+                tierraFirme.Draw(spriteBatch, GraphicsDevice);
+
+                particleEngine.Draw(spriteBatch);
+                player.Draw(spriteBatch);
+
+                for (int i = 0; i < Enemigos.Count; i++)
+                {
+                    Enemigos[i].Draw(spriteBatch);
+                }
+
+                for (int i = 0; i < Proyectiles.Count; i++)
+                {
+                    Proyectiles[i].Draw(spriteBatch);
+                }
+
+                for (int i = 0; i < Explosiones.Count; i++)
+                {
+                    Explosiones[i].Draw(spriteBatch);
+                }
+
+
                 spriteBatch.DrawString(font, "Puntaje: " + score, new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y), Color.White);
                 spriteBatch.DrawString(font, "Vida: " + player.Vida, new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y + 30), Color.White);
                 spriteBatch.DrawString(font, "Tiempo: " + totalTime, new Vector2(GraphicsDevice.Viewport.Width - 190, GraphicsDevice.Viewport.TitleSafeArea.Y), Color.White);
@@ -552,11 +569,8 @@ namespace Shooter
                 spriteBatch.DrawString(font, "Presione N para\njugar nuevamente", new Vector2(GraphicsDevice.Viewport.Width / 2 - 300, GraphicsDevice.Viewport.Height / 2 + 45), Color.Red);
             }
 
-            // Por algún motivo por cada frame hay que llamar a .Begin y .End del spritebatch para que termine de dibujar...
             spriteBatch.End();
-
             base.Draw(gameTime);
         }
-
     }
 }

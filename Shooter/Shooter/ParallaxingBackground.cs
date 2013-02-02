@@ -22,7 +22,7 @@ namespace Shooter
         public float speed { get; private set; }
         public float initialSpeed { get; private set; }
 
-        public void Initialize(ContentManager content, String texturePath, int screenWidth, float speed)
+        public void Initialize(ContentManager content, String texturePath, int screenWidth, float speed, float deltaY = 0)
         {
             // Load the background texture we will be using
             texture = content.Load<Texture2D>(texturePath);
@@ -38,7 +38,7 @@ namespace Shooter
             for (int i = 0; i < positions.Length; i++)
             {
                 // We need the tiles to be side by side to create a tiling effect
-                positions[i] = new Vector2(i * texture.Width, 0);
+                positions[i] = new Vector2(i * texture.Width, deltaY);
             }
         }
 

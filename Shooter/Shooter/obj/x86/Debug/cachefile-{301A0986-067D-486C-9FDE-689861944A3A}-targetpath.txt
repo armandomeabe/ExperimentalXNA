@@ -23,3 +23,6 @@ Content\ammo.xnb
 Content\Spark.xnb
 Content\bgLayer2extraWide.xnb
 Content\bgLayer1extraWide.xnb
+Content\Floor1.xnb
+Content\mainMenuTall.xnb
+Content\Floor1extraWide.xnb
