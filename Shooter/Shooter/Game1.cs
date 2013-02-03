@@ -191,18 +191,18 @@ namespace Shooter
             AnimacionEnemigo.Inicializar(texturaEnemigo, Posicion, 47, 61, 8, 30, Color.White, 1f, true);
 
             var Enemigo = new Enemigo();
-            Enemigo.Inicializar(AnimacionEnemigo, Content, GraphicsDevice);
+            Enemigo.Inicializar(AnimacionEnemigo, Content, GraphicsDevice, new Vector2(-5, 0), true);
             Enemigos.Add(Enemigo);
         }
 
         private void AgregarEnemigoTerrestre()
         {
             var AnimacionEnemigo = new Animacion();
-            var Posicion = new Vector2(800, random.Next(400,480));
+            var Posicion = new Vector2(800, random.Next(400, 480));
             AnimacionEnemigo.Inicializar(texturaEnemigoTerrestre, Posicion, 100, 138, 1, 1, Color.White, .5f, true);
 
             var Enemigo = new Enemigo();
-            Enemigo.Inicializar(AnimacionEnemigo, Content, GraphicsDevice, true);
+            Enemigo.Inicializar(AnimacionEnemigo, Content, GraphicsDevice, new Vector2(-3, -5), true);
             EnemigosTerrestres.Add(Enemigo);
         }
 
@@ -349,7 +349,7 @@ namespace Shooter
 
         private void ActualizarPersonaje(GameTime gameTime)
         {
-            player.Update(gameTime, estadoActualGamePad, estadoActualDelTeclado, GraphicsDevice);
+            player.Update(gameTime, estadoActualGamePad, estadoActualDelTeclado, GraphicsDevice, new Vector2(5, 0));
         }
 
         /// <summary>
@@ -418,7 +418,7 @@ namespace Shooter
             {
                 foreach (var proyectil in proyectiles)
                 {
-                    if (rectangle1.Intersects(new Rectangle((int)proyectil.Posicion.X, (int)proyectil.Posicion.Y,(int)proyectil.Ancho, (int)proyectil.Alto)))
+                    if (rectangle1.Intersects(new Rectangle((int)proyectil.Posicion.X, (int)proyectil.Posicion.Y, (int)proyectil.Ancho, (int)proyectil.Alto)))
                     {
                         player.Vida -= proyectil.DaniosQueCausa;
                         proyectil.Activo = false;

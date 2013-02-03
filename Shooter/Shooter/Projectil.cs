@@ -11,6 +11,7 @@ namespace Shooter
     {
         public Texture2D Textura;
         public Vector2 Posicion;
+        public Vector2 Direccion;
         public bool Activo;
         public int DaniosQueCausa;
         Viewport viewport;
@@ -24,8 +25,9 @@ namespace Shooter
         }
         float VelocidadDeMovimiento;
 
-        public Projectil(Viewport viewport, Texture2D textura, Vector2 posicion, int DaniosQueCausa = 2)
+        public Projectil(Viewport viewport, Texture2D textura, Vector2 posicion, Vector2 direccion, int DaniosQueCausa = 2)
         {
+            this.Direccion = direccion;
             Textura = textura;
             Posicion = new Vector2(posicion.X, posicion.Y + (new Random(DateTime.Now.Millisecond).Next(-15, 15)));
             this.viewport = viewport;
@@ -34,13 +36,9 @@ namespace Shooter
             VelocidadDeMovimiento = 20f;
         }
 
-        public void Update(float deltaX = 15, float deltaY = 0)
+        public void Update()
         {
-            // Los proyectiles siempre se mueven hacia la derecha
-            Posicion.X += deltaX;
-            Posicion.Y += deltaY;
-            //Posicion.Y += (new Random(DateTime.Now.Millisecond).Next(-1, 1)); // No queda muy bueno...
-
+            Posicion += Direccion;
             // Si se van de la pantalla los desactivo para que después se borren del vector.
             if (Posicion.X > viewport.Width || Posicion.X < 0 || Posicion.Y > viewport.Height || Posicion.Y < 0)
                 Activo = false;

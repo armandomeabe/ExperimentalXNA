@@ -13,7 +13,7 @@ namespace Shooter
     class Personaje
     {
         ParticleEngine particleEngine;
-        
+        Vector2 DireccionDisparos;
         // Disparos
         public long municiones = 1000000;
         public Texture2D TexturaProyectil;
@@ -44,6 +44,7 @@ namespace Shooter
 
         public void Inicializar(Animacion animation, Vector2 position, ContentManager content, GraphicsDevice graphicsDevice)
         {
+            this.DireccionDisparos = new Vector2(15, 0);
             this.graphicsDevice = graphicsDevice;
             Animacion = animation;
             Posicion = position;
@@ -66,14 +67,14 @@ namespace Shooter
             TiempoDeUltimoDisparo = gameTime.TotalGameTime;
             while (shoots > 0)
             {
-                Proyectiles.Add(new Projectil(graphicsDevice.Viewport, TexturaProyectil, Posicion));
+                Proyectiles.Add(new Projectil(graphicsDevice.Viewport, TexturaProyectil, Posicion, DireccionDisparos));
                 SonidoLaser.Play();
                 shoots--;
                 municiones--;
             }
         }
 
-        public void Update(GameTime gameTime, GamePadState gamepadState, KeyboardState keyboardState, GraphicsDevice graphics)
+        public void Update(GameTime gameTime, GamePadState gamepadState, KeyboardState keyboardState, GraphicsDevice graphics, Vector2 DireccionDisparos)
         {
             Animacion.Posicion = Posicion;
             Animacion.Update(gameTime);
@@ -81,7 +82,7 @@ namespace Shooter
             // Partículas
             particleEngine.EmitterLocation = new Vector2((int)Posicion.X, (int)Posicion.Y);
             particleEngine.Update();
-            
+
             ActualizarProyectiles();
 
             // Windows Phone Controls

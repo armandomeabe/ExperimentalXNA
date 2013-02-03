@@ -16,6 +16,7 @@ namespace Shooter
 
         public Animacion AnimacionEnemigo;
         public Vector2 Posicion;
+        public Vector2 DireccionDisparos;
         //float Rotacion;
 
         public bool Activo;
@@ -35,8 +36,9 @@ namespace Shooter
 
         public float VelocidadMovimiento;
 
-        public void Inicializar(Animacion animacion, ContentManager content, GraphicsDevice graphicsDevice, bool puedeDisparar = false)
+        public void Inicializar(Animacion animacion, ContentManager content, GraphicsDevice graphicsDevice, Vector2 DireccionDisparos, bool puedeDisparar = false)
         {
+            this.DireccionDisparos = DireccionDisparos;
             this.puedeDisparar = puedeDisparar;
             this.graphicsDevice = graphicsDevice;
             AnimacionEnemigo = animacion;
@@ -59,13 +61,11 @@ namespace Shooter
 
         public void Disparar()
         {
-            proyectiles.Add(new Projectil(graphicsDevice.Viewport, TexturaProyectil, Posicion, 1));
+            proyectiles.Add(new Projectil(graphicsDevice.Viewport, TexturaProyectil, Posicion, DireccionDisparos));
         }
 
         public void Update(GameTime gameTime)
         {
-
-
             if (puedeDisparar && ((int)new Random().Next(0, 10)).Equals(5))
                 Disparar();
 
@@ -82,7 +82,7 @@ namespace Shooter
                 if (!p.Activo)
                     proyectiles.Remove(p);
                 else
-                    p.Update(-3, -2);
+                    p.Update();
             }
 
             // Partículas
