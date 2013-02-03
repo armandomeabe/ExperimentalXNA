@@ -433,6 +433,26 @@ namespace Shooter
                 }
             }
 
+            // Proyectiles enemigos contra proyectiles del personaje
+            foreach (var proyectiles in (from e in Enemigos.Concat(EnemigosTerrestres) select e.proyectiles))
+            {
+                foreach (var proyectil in proyectiles)
+                {
+                    for (int i = 0; i < player.Proyectiles.Count; i++)
+                    {
+                        // Create the rectangles we need to determine if we collided with each other
+                        rectangle1 = new Rectangle((int)player.Proyectiles[i].Posicion.X -
+                        player.Proyectiles[i].Ancho / 2, (int)player.Proyectiles[i].Posicion.Y -
+                        player.Proyectiles[i].Alto / 2, player.Proyectiles[i].Ancho, player.Proyectiles[i].Alto);
+
+                        if (rectangle1.Intersects(new Rectangle((int)proyectil.Posicion.X, (int)proyectil.Posicion.Y, (int)proyectil.Ancho, (int)proyectil.Alto)))
+                        {
+                            proyectil.Activo = false;
+                        }
+                    }
+                }
+            }
+
             // Projectile vs Enemy Collision
             for (int i = 0; i < player.Proyectiles.Count; i++)
             {
@@ -457,6 +477,7 @@ namespace Shooter
                             score += Enemigos[j].Puntos;
                     }
                 }
+
                 for (int j = 0; j < EnemigosTerrestres.Count; j++)
                 {
                     // Create the rectangles we need to determine if we collided with each other

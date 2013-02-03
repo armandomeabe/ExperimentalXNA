@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input.Touch;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
 
 
 namespace Shooter
@@ -61,11 +62,11 @@ namespace Shooter
             TiempoDeUltimoDisparo = new TimeSpan[3];
             shoots = new int[3];
 
-            DisparosFrecuencia[0] = new TimeSpan(0, 0, 0, 0, 250);
-            shoots[0] = 4;
-            DisparosFrecuencia[1] = new TimeSpan(0, 0, 0, 0, 25);
-            shoots[1] = 40;
-            DisparosFrecuencia[2] = new TimeSpan(0, 0, 0, 0, 2);
+            DisparosFrecuencia[0] = new TimeSpan(0, 0, 0, 0, 100);
+            shoots[0] = 10;
+            DisparosFrecuencia[1] = new TimeSpan(0, 0, 0, 0, 50);
+            shoots[1] = 50;
+            DisparosFrecuencia[2] = new TimeSpan(0, 0, 0, 0, 1);
             shoots[2] = 500;
 
             // Rastro de partículas :D
@@ -76,7 +77,7 @@ namespace Shooter
 
         public void Disparar(int type, GameTime gameTime)
         {
-            if (type < 0 || type > 2)
+            if (type < 0 || type > 2 && municiones > 0)
                 return;
 
             TimeSpan delayShoot = gameTime.TotalGameTime - TiempoDeUltimoDisparo[type];
@@ -84,13 +85,15 @@ namespace Shooter
             if (delayShoot < DisparosFrecuencia[type])
                 return;
             TiempoDeUltimoDisparo[type] = gameTime.TotalGameTime;
+            //Trace.WriteLine("delayShoot: " + delayShoot.ToString());
 
-            //for (int i=0;i<shoots[type];i++)
-            //{
+            for (int i = 0; i < shoots[type]/10; i++)
+            {
                 Proyectiles.Add(new Projectil(graphicsDevice.Viewport, TexturaProyectil, Posicion, DireccionDisparos));
                 SonidoLaser.Play();
                 municiones--;
-            //}
+            }
+    
         }
         public void DispararJoystick(int shoots, GameTime gameTime)
         {
@@ -157,14 +160,14 @@ namespace Shooter
             if (shoots > 0 && shoots < 0.2f) shoots = 1;
             else if (shoots >= 0.2f && shoots < 0.5f) shoots = 3;
             else if (shoots >= 0.5f && shoots < 1.0f) shoots = 6;
-            else if (shoots.Equals(1.0f) || keyboardState.IsKeyDown(Keys.D)) shoots += 30; // MEGA MEGA SHOOT!!
+            else if (shoots.Equals(1.0f) /*|| keyboardState.IsKeyDown(Keys.D)*/) shoots += 30; // MEGA MEGA SHOOT!!
             DispararJoystick((int)shoots, gameTime);
 
-            if (gamepadState.Buttons.A.Equals(ButtonState.Pressed) || keyboardState.IsKeyDown(Keys.A))
+            if (gamepadState.Buttons.A.Equals(ButtonState.Pressed) || keyboardState.IsKeyDown(Keys.A)) //Simple Shoot
                 Disparar(0, gameTime);
-            if (gamepadState.Buttons.B.Equals(ButtonState.Pressed) || keyboardState.IsKeyDown(Keys.W))
+            if (gamepadState.Buttons.B.Equals(ButtonState.Pressed) || keyboardState.IsKeyDown(Keys.W)) //Ultra Shoot
                 Disparar(1, gameTime);
-            if (gamepadState.Buttons.X.Equals(ButtonState.Pressed) || keyboardState.IsKeyDown(Keys.D))
+            if (gamepadState.Buttons.X.Equals(ButtonState.Pressed) || keyboardState.IsKeyDown(Keys.D)) //Super Ultra Mega Shoot (with keyboard)
                 Disparar(2, gameTime);
 
         }
