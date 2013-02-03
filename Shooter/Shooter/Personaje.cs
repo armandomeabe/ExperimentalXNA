@@ -20,8 +20,9 @@ namespace Shooter
         public List<Projectil> Proyectiles;
         SoundEffect SonidoLaser;
         // El rate de disparo del personaje
-        public TimeSpan DisparosFrecuencia;
-        public TimeSpan TiempoDeUltimoDisparo;
+        public TimeSpan[] DisparosFrecuencia;
+        public TimeSpan[] TiempoDeUltimoDisparo;
+        public int[] shoots;
 
         public Animacion Animacion;
         public Vector2 Posicion;
@@ -56,21 +57,48 @@ namespace Shooter
             TexturaProyectil = content.Load<Texture2D>("laser");
             SonidoLaser = content.Load<SoundEffect>("sound/laserFire");
 
+            DisparosFrecuencia = new TimeSpan[3];
+            TiempoDeUltimoDisparo = new TimeSpan[3];
+            shoots = new int[3];
+
+            DisparosFrecuencia[0] = new TimeSpan(0, 0, 0, 0, 250);
+            shoots[0] = 4;
+            DisparosFrecuencia[1] = new TimeSpan(0, 0, 0, 0, 25);
+            shoots[1] = 40;
+            DisparosFrecuencia[2] = new TimeSpan(0, 0, 0, 0, 2);
+            shoots[2] = 500;
+
             // Rastro de partículas :D
             var textures = new List<Texture2D>();
             textures.Add(content.Load<Texture2D>("spark"));
             particleEngine = new ParticleEngine(textures, new Vector2(400, 240));
         }
 
-        public void Disparar(int shoots, GameTime gameTime)
+        public void Disparar(int type, GameTime gameTime)
         {
-            TiempoDeUltimoDisparo = gameTime.TotalGameTime;
-            while (shoots > 0)
-            {
+            if (type < 0 || type > 2)
+                return;
+
+            TimeSpan delayShoot = gameTime.TotalGameTime - TiempoDeUltimoDisparo[type];
+
+            if (delayShoot < DisparosFrecuencia[type])
+                return;
+            TiempoDeUltimoDisparo[type] = gameTime.TotalGameTime;
+
+            //for (int i=0;i<shoots[type];i++)
+            //{
                 Proyectiles.Add(new Projectil(graphicsDevice.Viewport, TexturaProyectil, Posicion, DireccionDisparos));
                 SonidoLaser.Play();
-                shoots--;
                 municiones--;
+            //}
+        }
+        public void DispararJoystick(int shoots, GameTime gameTime)
+        {
+            for (int i = 0; i < shoots; i++)
+            {
+            Proyectiles.Add(new Projectil(graphicsDevice.Viewport, TexturaProyectil, Posicion, DireccionDisparos));
+            SonidoLaser.Play();
+            municiones--;
             }
         }
 
@@ -80,7 +108,7 @@ namespace Shooter
             Animacion.Update(gameTime);
 
             // Partículas
-            particleEngine.EmitterLocation = new Vector2((int)Posicion.X, (int)Posicion.Y);
+            particleEngine.EmitterLocation = Posicion;
             particleEngine.Update();
 
             ActualizarProyectiles();
@@ -130,10 +158,14 @@ namespace Shooter
             else if (shoots >= 0.2f && shoots < 0.5f) shoots = 3;
             else if (shoots >= 0.5f && shoots < 1.0f) shoots = 6;
             else if (shoots.Equals(1.0f) || keyboardState.IsKeyDown(Keys.D)) shoots += 30; // MEGA MEGA SHOOT!!
-            Disparar((int)shoots, gameTime);
+            DispararJoystick((int)shoots, gameTime);
 
             if (gamepadState.Buttons.A.Equals(ButtonState.Pressed) || keyboardState.IsKeyDown(Keys.A))
-                Disparar(3, gameTime);
+                Disparar(0, gameTime);
+            if (gamepadState.Buttons.B.Equals(ButtonState.Pressed) || keyboardState.IsKeyDown(Keys.W))
+                Disparar(1, gameTime);
+            if (gamepadState.Buttons.X.Equals(ButtonState.Pressed) || keyboardState.IsKeyDown(Keys.D))
+                Disparar(2, gameTime);
 
         }
 

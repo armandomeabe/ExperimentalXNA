@@ -146,3 +146,17 @@ C:\Users\ArmandoAndres\Desktop\Nueva carpeta\Shooter\Shooter\bin\x86\Debug\Conte
 D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\buildings.xnb
 D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Box2DX.pdb
 D:\Librerías\Research\Game Development\XNA\Shooter_Project_Windows\Shooter\GIT\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\minibullet.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\circle.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\diamond.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\star.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\ammo.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Spark.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\bgLayer2extraWide.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\bgLayer1extraWide.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Floor1.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\mainMenuTall.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\Floor1extraWide.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\bloodc.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\buildings.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Content\minibullet.xnb
+D:\repos\ExperimentalXNA\Shooter\Shooter\bin\x86\Debug\Box2DX.pdb

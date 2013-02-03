@@ -23,6 +23,7 @@ namespace Shooter
         SpriteBatch spriteBatch;
 
         Personaje player;
+        Vector2 PosicionInicialPersonaje;
 
         KeyboardState estadoActualDelTeclado;
         KeyboardState estadoPrevioDelTeclado;
@@ -149,9 +150,9 @@ namespace Shooter
             Texture2D TexturaPersonaje = Content.Load<Texture2D>("shipAnimation");
             AnimacionPersonaje.Inicializar(TexturaPersonaje, Vector2.Zero, 115, 69, 8, 30, Color.White, 1f, true);
 
-            Vector2 PosicionPersonaje = new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y
+            PosicionInicialPersonaje = new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y
             + GraphicsDevice.Viewport.TitleSafeArea.Height / 2);
-            player.Inicializar(AnimacionPersonaje, PosicionPersonaje, Content, GraphicsDevice);
+            player.Inicializar(AnimacionPersonaje, PosicionInicialPersonaje, Content, GraphicsDevice);
 
             InicializarFondos();
 
@@ -281,6 +282,7 @@ namespace Shooter
             {
                 fondoCapa1.AlterSpeed(1.2f);
                 fondoCapa2.AlterSpeed(1.2f);
+				tierraFirme.AlterSpeed(0.6f);
             }
             if (estadoActualGamePad.Triggers.Left > 0)
             {
@@ -340,9 +342,16 @@ namespace Shooter
             if (estadoActualDelTeclado.IsKeyDown(Keys.N) || estadoActualGamePad.Buttons.X == ButtonState.Pressed)
             {
                 pause = gameOver = false;
+				
                 player.Activo = true;
-                player.Vida = 0;
+                player.Vida = 100;
+				player.Posicion = PosicionInicialPersonaje;
+				
                 score = 0;
+				
+				Enemigos.Clear();
+				EnemigosTerrestres.Clear();
+				
                 timer = new TimeSpan(0);
             }
         }
@@ -388,9 +397,6 @@ namespace Shooter
                     // destroy it
                     Enemigos[i].Vida = 0;
 
-                    // If the player health is less than zero we died
-                    if (player.Vida <= 0)
-                        player.Activo = false;
                 }
 
             }
@@ -473,6 +479,9 @@ namespace Shooter
                     }
                 }
             }
+            // If the player health is less than zero we died
+            if (player.Vida <= 0)
+                player.Activo = false;
         }
 
 
@@ -485,7 +494,7 @@ namespace Shooter
             {   // Si estamos en pausa solo dibujo el fondo de menú principal y termina el método.
                 spriteBatch.Draw(fondoMenuPrincipal, Vector2.Zero, Color.White);
             }
-            if (player.Activo && !(pause || gameOver))
+            if (player.Activo && !gameOver)
             {
                 spriteBatch.Draw(fondoEstatico, Vector2.Zero, Color.White);
                 //spriteBatch.Draw(fondoEstatico, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
@@ -518,6 +527,11 @@ namespace Shooter
                 spriteBatch.DrawString(font, "Puntaje Total: " + score, new Vector2(GraphicsDevice.Viewport.Width / 2 - 300, GraphicsDevice.Viewport.Height / 2 - 15), Color.White);
                 spriteBatch.DrawString(font, "Tiempo Total: " + totalTime, new Vector2(GraphicsDevice.Viewport.Width / 2 - 300, GraphicsDevice.Viewport.Height / 2 + 15), Color.White);
                 spriteBatch.DrawString(font, "Presione N para\njugar nuevamente", new Vector2(GraphicsDevice.Viewport.Width / 2 - 300, GraphicsDevice.Viewport.Height / 2 + 45), Color.Red);
+            }
+
+            if (pause)
+            {
+                spriteBatch.DrawString(font, "Pausa", new Vector2(GraphicsDevice.Viewport.Width / 2 - 100, GraphicsDevice.Viewport.Height / 2 + 45), Color.White);
             }
 
             spriteBatch.End();
